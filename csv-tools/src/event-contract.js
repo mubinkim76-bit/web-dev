@@ -8,6 +8,6 @@ export function validEvent(e){
  if(e.type==='paid_interest')return e.action==='interest'&&e.outcome==='clicked';
  if(e.type==='feedback')return e.action==='feedback'&&e.outcome==='reported';
  if(!actions[e.app].includes(e.action))return false;
- if(e.type==='game_finished')return e.app==='gomoku'&&e.action==='game'&&['won','draw'].includes(e.outcome);
+ if(e.type==='game_finished')return false; // CSV has no game completion events.
  return ({run_started:['none'],run_succeeded:['complete','partial'],run_failed:['execution','validation'],run_cancelled:['user_cancel','superseded','navigation','needs_choice'],output_generated:['generated'],download_requested:['requested'],print_requested:['requested']})[e.type]?.includes(e.outcome) || false;
 }
