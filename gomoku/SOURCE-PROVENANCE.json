@@ -1,0 +1,182 @@
+[
+  {
+    "path": "LICENSE.md",
+    "bytes": 214,
+    "sha256": "2c0cf82cd75483be5b6210f38a8fce0318f99cfc901b2cc5b6b00ad78111ff77",
+    "origin": "standalone-extraction-or-shell"
+  },
+  {
+    "path": "README.md",
+    "bytes": 2290,
+    "sha256": "8aad03108f384b61927be273e2594617df964cb657048cbfea27a315d5b1f637",
+    "origin": "standalone-public-run-instructions"
+  },
+  {
+    "path": "THIRD_PARTY_NOTICES.md",
+    "bytes": 257,
+    "sha256": "de55f3d982d07cd5fe747e8b1a03127cf69de25245ce3e38d5817794358fe8a7",
+    "origin": "standalone-extraction-or-shell"
+  },
+  {
+    "path": "_headers",
+    "bytes": 361,
+    "sha256": "ef31450f5ebd89a9dd027726b67e89dfa2ae61fe3fb5f4c433edc6e15cb349fa",
+    "origin": "standalone-extraction-or-shell"
+  },
+  {
+    "path": "index.html",
+    "bytes": 829,
+    "sha256": "914f19b0b964bdaa7dccd0b300594f4ed2350a72a929caa9676653157d3a109e",
+    "origin": "standalone-extraction-or-shell"
+  },
+  {
+    "path": "package.json",
+    "bytes": 505,
+    "sha256": "efc50300d8182b4f92608e6effb57210c934c53f402c7bdd843db645179bb9b1",
+    "origin": "standalone-extraction-or-shell"
+  },
+  {
+    "path": "public/favicon.svg",
+    "bytes": 169,
+    "sha256": "3055ddb5cbd6d44b47d103cf785a6947e448a2bd4586c2924a76f96f4ac08300",
+    "origin": "v0.2.3-byte-identical"
+  },
+  {
+    "path": "public/fonts/LICENSE.txt",
+    "bytes": 14712,
+    "sha256": "849f4ea9c214fa4ac3593b770c699f387534b11ce671264c1b10d85bdcb5997b",
+    "origin": "v0.2.3-byte-identical"
+  },
+  {
+    "path": "public/fonts/NotoSansKR-Local.woff",
+    "bytes": 1414940,
+    "sha256": "9919ef940fa7a362afea051ef1fe736dbf88b5a031af8ea98e698a82b27268b0",
+    "origin": "v0.2.3-byte-identical"
+  },
+  {
+    "path": "scripts/build.mjs",
+    "bytes": 297,
+    "sha256": "613d325dd7f66eaa9dd47fb3a0ad1a85e68f1feddeb3062c385a0b50390aa0f1",
+    "origin": "standalone-extraction-or-shell"
+  },
+  {
+    "path": "scripts/check.mjs",
+    "bytes": 441,
+    "sha256": "9d15a32b8cd68b1d234d5e975d24fd20b48ce016c1bb6202a6d9b98d54561496",
+    "origin": "standalone-extraction-or-shell"
+  },
+  {
+    "path": "scripts/serve.mjs",
+    "bytes": 1401,
+    "sha256": "08b3955205cc2ee03cf66dc5d6fcb248d27240b4aa0511794086b6f9f570e384",
+    "origin": "standalone-extraction-or-shell"
+  },
+  {
+    "path": "scripts/test.mjs",
+    "bytes": 195,
+    "sha256": "bd4a1a8b794667854dec2e81fe5889fe7c8a141dd0b83f675374c789c9091e21",
+    "origin": "standalone-extraction-or-shell"
+  },
+  {
+    "path": "src/app.js",
+    "bytes": 1935,
+    "sha256": "3365f96d12d387d17782f652c8fa8226d728658083d1c11e57dfa465dc951194",
+    "origin": "standalone-extraction-or-shell"
+  },
+  {
+    "path": "src/event-contract.js",
+    "bytes": 1389,
+    "sha256": "10c6362410d0836a01e30c090aea95e5ab1edb818427faec0454ecfde22fa44e",
+    "origin": "standalone-extraction-or-shell"
+  },
+  {
+    "path": "src/lib/gomoku-ai.js",
+    "bytes": 4656,
+    "sha256": "86dc87c640f17f5cff55508b5efe9bd9ac280dbcc579874e9e4aa292c88443a1",
+    "origin": "v0.2.3-byte-identical"
+  },
+  {
+    "path": "src/lib/gomoku-engine.js",
+    "bytes": 3947,
+    "sha256": "6cea729f72c792bb3e4c6ce86d81b0970e940445c657db24f63a35c4f36dd9c4",
+    "origin": "v0.2.3-byte-identical"
+  },
+  {
+    "path": "src/lib/gomoku-session.js",
+    "bytes": 2759,
+    "sha256": "2cbb675a64b63df13f8dbe8c8656026bfd9b0d0606a822fb8056370779d172f5",
+    "origin": "v0.2.3-byte-identical"
+  },
+  {
+    "path": "src/lib/gomoku-storage.js",
+    "bytes": 3114,
+    "sha256": "040c31ca98fb997ec02165f1f95a892993b0f71c99cdc602e82a48230d55ae80",
+    "origin": "v0.2.3-byte-identical"
+  },
+  {
+    "path": "src/measurement.js",
+    "bytes": 2435,
+    "sha256": "3afa8f97ab34dbcf59e646a59634c731f239ed6cb9ad1a1ccdfb64c7acafdc16",
+    "origin": "standalone-extraction-or-shell"
+  },
+  {
+    "path": "src/shared.js",
+    "bytes": 2647,
+    "sha256": "617c99beb42034711186a45e95bd35ce357e871e67f34df25920253e7056d2dd",
+    "origin": "v0.2.3-byte-identical"
+  },
+  {
+    "path": "src/styles.css",
+    "bytes": 4548,
+    "sha256": "a1329ff8e16154977b670a67cb0b81adf4dbc303ac831dc72e0069609d70bafd",
+    "origin": "standalone-extraction-or-shell"
+  },
+  {
+    "path": "src/tools/gomoku-worker.js",
+    "bytes": 462,
+    "sha256": "1b3afbc4ff39c49037ffb6e796274b6d0aa942061bd18267045b9ae9d62db928",
+    "origin": "v0.2.3-byte-identical"
+  },
+  {
+    "path": "src/tools/gomoku.css",
+    "bytes": 9105,
+    "sha256": "5817339810ee7be674fb5624a977cf028fd3266ec993f7b3a40a3c1145c66539",
+    "origin": "v0.2.3-byte-identical"
+  },
+  {
+    "path": "src/tools/gomoku.js",
+    "bytes": 33395,
+    "sha256": "0fd18d5fec9e9f35ac6b64109de3072d0350826f830d1951ba2d039db2afd333",
+    "origin": "v0.2.3-byte-identical"
+  },
+  {
+    "path": "tests/gomoku-ui.test.mjs",
+    "bytes": 6578,
+    "sha256": "130b7c11f9b8d519277f6ec5940972d87cccadf9ba34566f82efe92afb963509",
+    "origin": "v0.2.3-byte-identical"
+  },
+  {
+    "path": "tests/gomoku.test.mjs",
+    "bytes": 12906,
+    "sha256": "f28003d4f2c7efb3309d285df975b90b308f94d2d819b0d80a8e6c9e02b454c6",
+    "origin": "v0.2.3-byte-identical"
+  },
+  {
+    "path": "tests/helpers/data-game-dom.mjs",
+    "bytes": 4356,
+    "sha256": "27ffba8d23bd499ec68f4f4b24ba8ff32b79846ce8638dac69be55ac13e71bc2",
+    "origin": "v0.2.3-byte-identical"
+  },
+  {
+    "path": "tests/helpers/gomoku-regression-dom.mjs",
+    "bytes": 2056,
+    "sha256": "f6487a8e5efda53902f7dbed1fd93dc171bad021bc6097f5b10bf9519a1de2c8",
+    "origin": "v0.2.3-byte-identical"
+  },
+  {
+    "path": "tests/mount-contract.test.mjs",
+    "bytes": 3127,
+    "sha256": "3f953d245fac93d2d383a3754d54174538d66ba743a03f0cd775926f958d5bf4",
+    "origin": "standalone-extraction-or-shell"
+  }
+]

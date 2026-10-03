@@ -1,0 +1,164 @@
+{
+  "service": "image-batch",
+  "version": "0.2.3-independent.1",
+  "features": [
+    "JPEG/PNG/static WebP batch resize/convert/rename",
+    "up to 3 output presets",
+    "preview, individual output and ZIP, JSON presets"
+  ],
+  "limits": [
+    "Desktop 20 images / 100 MiB / 24 MP; narrow-screen 10 / 40 MiB / 12 MP",
+    "Output 200 MiB desktop / 60 MiB narrow-screen; dimensions 16–4096; unsupported HEIC/RAW/SVG/animation"
+  ],
+  "policy": {
+    "free": true,
+    "account_required": false,
+    "payments": false,
+    "ads": false,
+    "server_telemetry": false,
+    "runtime_external_dependencies": false
+  },
+  "entry": "/",
+  "suggested_cloudflare_project": "p11-image-batch-27e343-261003",
+  "remote_name_checked": false,
+  "deployed": false,
+  "commands": {
+    "start": "node scripts/serve.mjs",
+    "dev": "node scripts/serve.mjs",
+    "build": "node scripts/build.mjs",
+    "preview": "node scripts/serve.mjs --dist",
+    "lint": "node --experimental-vm-modules scripts/check.mjs",
+    "test": "node scripts/test.mjs",
+    "check": "npm run lint && npm test && npm run build"
+  },
+  "qa": {
+    "node": {
+      "service": "image-batch",
+      "node": "20.20.2",
+      "siblings_present": false,
+      "steps": [
+        {
+          "step": "lint",
+          "exit_code": 0,
+          "test_cases": null
+        },
+        {
+          "step": "test",
+          "exit_code": 0,
+          "test_cases": 12
+        },
+        {
+          "step": "build",
+          "exit_code": 0,
+          "test_cases": null
+        }
+      ],
+      "status": "PASS",
+      "test_cases": 12,
+      "test_files_failed": 0
+    },
+    "browser": [
+      {
+        "name": "preview, six real outputs, ZIP, alpha pixels and EXIF orientation",
+        "status": "PASS",
+        "detail": {
+          "zip_images": [
+            {
+              "name": "standard/alpha_001_standard.jpg",
+              "dimensions": [
+                200,
+                100
+              ],
+              "mode": "RGB"
+            },
+            {
+              "name": "preset2/alpha_001_preset2.png",
+              "dimensions": [
+                180,
+                90
+              ],
+              "mode": "RGBA"
+            },
+            {
+              "name": "standard/rotated_002_standard.jpg",
+              "dimensions": [
+                240,
+                360
+              ],
+              "mode": "RGB"
+            },
+            {
+              "name": "preset2/rotated_002_preset2.png",
+              "dimensions": [
+                120,
+                180
+              ],
+              "mode": "RGBA"
+            },
+            {
+              "name": "standard/third_003_standard.jpg",
+              "dimensions": [
+                200,
+                100
+              ],
+              "mode": "RGB"
+            },
+            {
+              "name": "preset2/third_003_preset2.png",
+              "dimensions": [
+                180,
+                90
+              ],
+              "mode": "RGBA"
+            }
+          ],
+          "alpha_and_exif_pixels": "PASS"
+        }
+      },
+      {
+        "name": "cancel, rerun and clear",
+        "status": "PASS",
+        "detail": "Actual asynchronous decode cancelled; full rerun and clear succeeded"
+      },
+      {
+        "name": "corrupt input and failed-item retry",
+        "status": "PASS",
+        "detail": "Valid result retained while corrupt item fails on retry"
+      },
+      {
+        "name": "upload replacement and settings round trip",
+        "status": "PASS",
+        "detail": "Latest selection wins; downloaded settings reload and malformed settings rejected"
+      },
+      {
+        "name": "Korean/English at 1440, 390 and 320 pixels",
+        "status": "PASS",
+        "detail": [
+          "ko-1440.png",
+          "ko-390.png",
+          "ko-320.png",
+          "en-1440.png",
+          "en-390.png",
+          "en-320.png"
+        ]
+      },
+      {
+        "name": "standalone browser dependencies and zero external traffic",
+        "status": "PASS",
+        "detail": {
+          "page_errors": [],
+          "requests": 121,
+          "external_requests": 0,
+          "server_posts": 0,
+          "siblings_present": false
+        }
+      }
+    ]
+  },
+  "not_run": [
+    "physical mobile",
+    "native print dialog/physical print",
+    "Firefox/WebKit/Edge/Safari",
+    "production Cloudflare TLS/CDN"
+  ]
+}

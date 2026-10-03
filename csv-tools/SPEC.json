@@ -1,0 +1,127 @@
+{
+  "service": "csv-tools",
+  "version": "0.2.3-independent.1",
+  "features": [
+    "UTF-8 CSV/TSV parse, positional mapping and merge",
+    "ordered trim/literal replace/empty-row rules",
+    "explicit duplicate/risky raw export approval; transformed-cell audit"
+  ],
+  "limits": [
+    "3 files / 2 MiB combined / 10000 rows / 100 columns",
+    "Paste textarea 2000 physical lines; cells remain strings; no spreadsheet round-trip guarantee"
+  ],
+  "policy": {
+    "free": true,
+    "account_required": false,
+    "payments": false,
+    "ads": false,
+    "server_telemetry": false,
+    "runtime_external_dependencies": false
+  },
+  "entry": "/",
+  "suggested_cloudflare_project": "p11-csv-tools-27e343-261003",
+  "remote_name_checked": false,
+  "deployed": false,
+  "commands": {
+    "start": "node scripts/serve.mjs",
+    "dev": "node scripts/serve.mjs",
+    "build": "node scripts/build.mjs",
+    "preview": "node scripts/serve.mjs --dist",
+    "lint": "node --experimental-vm-modules scripts/check.mjs",
+    "test": "node scripts/test.mjs",
+    "check": "npm run lint && npm test && npm run build"
+  },
+  "qa": {
+    "node": {
+      "service": "csv-tools",
+      "node": "20.20.2",
+      "siblings_present": false,
+      "steps": [
+        {
+          "step": "lint",
+          "exit_code": 0,
+          "test_cases": null
+        },
+        {
+          "step": "test",
+          "exit_code": 0,
+          "test_cases": 20
+        },
+        {
+          "step": "build",
+          "exit_code": 0,
+          "test_cases": null
+        }
+      ],
+      "status": "PASS",
+      "test_cases": 20,
+      "test_files_failed": 0
+    },
+    "browser": [
+      {
+        "name": "CSV mapping, approved duplicates, protected download and invalidation",
+        "status": "PASS",
+        "detail": {
+          "rows": [
+            [
+              "id",
+              "name",
+              "note"
+            ],
+            [
+              "000123",
+              "한글",
+              "쉼표, 보존"
+            ],
+            [
+              "12345678901234567890",
+              "민수",
+              "첫 줄\n둘째 줄"
+            ],
+            [
+              "",
+              "빈 키",
+              "'=1+1"
+            ],
+            [
+              "000124",
+              "지수",
+              "원문 유지"
+            ]
+          ],
+          "duplicate_and_formula_approval": "PASS",
+          "format_invalidation": "PASS"
+        }
+      },
+      {
+        "name": "Korean/English at 1440, 390 and 320 pixels",
+        "status": "PASS",
+        "detail": [
+          "ko-1440.png",
+          "ko-390.png",
+          "ko-320.png",
+          "en-1440.png",
+          "en-390.png",
+          "en-320.png"
+        ]
+      },
+      {
+        "name": "standalone browser dependencies and zero external traffic",
+        "status": "PASS",
+        "detail": {
+          "page_errors": [],
+          "requests": 74,
+          "external_requests": 0,
+          "server_posts": 0,
+          "siblings_present": false
+        }
+      }
+    ]
+  },
+  "not_run": [
+    "physical mobile",
+    "native print dialog/physical print",
+    "Firefox/WebKit/Edge/Safari",
+    "production Cloudflare TLS/CDN"
+  ]
+}

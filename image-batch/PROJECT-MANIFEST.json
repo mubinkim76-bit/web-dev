@@ -1,0 +1,185 @@
+{
+  "service": "image-batch",
+  "folder": "image-batch",
+  "module": "images",
+  "mount": "mount",
+  "entry": "/",
+  "runtime": "Node >=20, no install",
+  "build_output": "dist",
+  "siblings_required": false,
+  "runtime_js_modules": 7,
+  "static_vendor_scripts": [
+    "jszip"
+  ],
+  "public_deployment": false,
+  "source_tree_sha256": "245b3e3cc4d7fade463e96813f6a0a45e652660215cd57dc551949ab24fb8c04",
+  "manifest": "PROJECT-MANIFEST.json",
+  "spec": "SPEC.json",
+  "node_test_cases": 12,
+  "browser_groups": 6,
+  "source_files": [
+    {
+      "path": "LICENSE.md",
+      "bytes": 214,
+      "sha256": "2c0cf82cd75483be5b6210f38a8fce0318f99cfc901b2cc5b6b00ad78111ff77",
+      "origin": "standalone-extraction-or-shell"
+    },
+    {
+      "path": "README.md",
+      "bytes": 2314,
+      "sha256": "7b75e0eb0ad5ad93441835231853f14b51f750d1d7b9ad4a5b3441ba9087a80b",
+      "origin": "standalone-public-run-instructions"
+    },
+    {
+      "path": "THIRD_PARTY_NOTICES.md",
+      "bytes": 314,
+      "sha256": "aea2d1208055724df358ae40b8e3df8a93e2d005bd939c05e907c75892b07f33",
+      "origin": "standalone-extraction-or-shell"
+    },
+    {
+      "path": "_headers",
+      "bytes": 361,
+      "sha256": "ef31450f5ebd89a9dd027726b67e89dfa2ae61fe3fb5f4c433edc6e15cb349fa",
+      "origin": "standalone-extraction-or-shell"
+    },
+    {
+      "path": "index.html",
+      "bytes": 905,
+      "sha256": "cc21c839196063f82519b28982af107e99c9eeb3cffc47628c4c4aad2e14efc4",
+      "origin": "standalone-extraction-or-shell"
+    },
+    {
+      "path": "package.json",
+      "bytes": 510,
+      "sha256": "1e9238094352b813e1cd10a184e932b3deca6b6cc21a5d9e6d42239971606e65",
+      "origin": "standalone-extraction-or-shell"
+    },
+    {
+      "path": "public/favicon.svg",
+      "bytes": 169,
+      "sha256": "3055ddb5cbd6d44b47d103cf785a6947e448a2bd4586c2924a76f96f4ac08300",
+      "origin": "v0.2.3-byte-identical"
+    },
+    {
+      "path": "public/fonts/LICENSE.txt",
+      "bytes": 14712,
+      "sha256": "849f4ea9c214fa4ac3593b770c699f387534b11ce671264c1b10d85bdcb5997b",
+      "origin": "v0.2.3-byte-identical"
+    },
+    {
+      "path": "public/fonts/NotoSansKR-Local.woff",
+      "bytes": 1414940,
+      "sha256": "9919ef940fa7a362afea051ef1fe736dbf88b5a031af8ea98e698a82b27268b0",
+      "origin": "v0.2.3-byte-identical"
+    },
+    {
+      "path": "public/vendor/JSZip-LICENSE.md",
+      "bytes": 33753,
+      "sha256": "566c953c6090b1218ca6217dd7359d45dde46581968586dc607d59a78af6a9c4",
+      "origin": "v0.2.3-byte-identical"
+    },
+    {
+      "path": "public/vendor/jszip.min.js",
+      "bytes": 97630,
+      "sha256": "acc7e41455a80765b5fd9c7ee1b8078a6d160bbbca455aeae854de65c947d59e",
+      "origin": "v0.2.3-byte-identical"
+    },
+    {
+      "path": "scripts/build.mjs",
+      "bytes": 297,
+      "sha256": "613d325dd7f66eaa9dd47fb3a0ad1a85e68f1feddeb3062c385a0b50390aa0f1",
+      "origin": "standalone-extraction-or-shell"
+    },
+    {
+      "path": "scripts/check.mjs",
+      "bytes": 441,
+      "sha256": "9d15a32b8cd68b1d234d5e975d24fd20b48ce016c1bb6202a6d9b98d54561496",
+      "origin": "standalone-extraction-or-shell"
+    },
+    {
+      "path": "scripts/serve.mjs",
+      "bytes": 1401,
+      "sha256": "08b3955205cc2ee03cf66dc5d6fcb248d27240b4aa0511794086b6f9f570e384",
+      "origin": "standalone-extraction-or-shell"
+    },
+    {
+      "path": "scripts/test.mjs",
+      "bytes": 195,
+      "sha256": "bd4a1a8b794667854dec2e81fe5889fe7c8a141dd0b83f675374c789c9091e21",
+      "origin": "standalone-extraction-or-shell"
+    },
+    {
+      "path": "src/app.js",
+      "bytes": 1992,
+      "sha256": "2cc6c6b8f3495191d57e2c5e83d4a6c40c7fb4eb9d12b42d4d41d5ae8778efdd",
+      "origin": "standalone-extraction-or-shell"
+    },
+    {
+      "path": "src/event-contract.js",
+      "bytes": 1443,
+      "sha256": "3f109add620c3aaf0f78449883e85d09f04f62f9fceab72a1a39d85e50f0e70e",
+      "origin": "standalone-extraction-or-shell"
+    },
+    {
+      "path": "src/lib/image-browser.js",
+      "bytes": 2403,
+      "sha256": "4f048fd77077f43f1c3094a47a5f59809f846100b8c088129015a2e3c8697ad8",
+      "origin": "v0.2.3-byte-identical"
+    },
+    {
+      "path": "src/lib/image-core.js",
+      "bytes": 4607,
+      "sha256": "3952c6efc6e4e1b610f82444019ca4f553340c0ebf514720d5165f9fd26ccacc",
+      "origin": "v0.2.3-byte-identical"
+    },
+    {
+      "path": "src/measurement.js",
+      "bytes": 2435,
+      "sha256": "3afa8f97ab34dbcf59e646a59634c731f239ed6cb9ad1a1ccdfb64c7acafdc16",
+      "origin": "standalone-extraction-or-shell"
+    },
+    {
+      "path": "src/shared.js",
+      "bytes": 2647,
+      "sha256": "617c99beb42034711186a45e95bd35ce357e871e67f34df25920253e7056d2dd",
+      "origin": "v0.2.3-byte-identical"
+    },
+    {
+      "path": "src/styles.css",
+      "bytes": 4630,
+      "sha256": "6e85def7b6db41dd4b160d3be70c250506994b09a0065162eccc2af35a62d5ac",
+      "origin": "standalone-extraction-or-shell"
+    },
+    {
+      "path": "src/tools/images.js",
+      "bytes": 15076,
+      "sha256": "afb22df53f2a96de9ed8b44485f59f9c5e86492af3a4c4b3738698911fd373b7",
+      "origin": "v0.2.3-byte-identical"
+    },
+    {
+      "path": "tests/core-regressions.test.mjs",
+      "bytes": 2965,
+      "sha256": "c0bf683dd5a2099f8beaf2d443cb455cace9a554da2ba50bb27b0e951f764649",
+      "origin": "standalone-extraction-or-shell"
+    },
+    {
+      "path": "tests/helpers/core-ui.mjs",
+      "bytes": 4358,
+      "sha256": "718efe026d89ebb2a702dec40fd73eef6d02656ca4cfd33be5d36af70086e460",
+      "origin": "v0.2.3-byte-identical"
+    },
+    {
+      "path": "tests/image.test.mjs",
+      "bytes": 2278,
+      "sha256": "6212cfb45161bee882f10b7a4d0fe155c28c0003be7f195c3213d757f84c3461",
+      "origin": "v0.2.3-byte-identical"
+    },
+    {
+      "path": "tests/mount-contract.test.mjs",
+      "bytes": 3127,
+      "sha256": "fbbd2e4f5cf331c86a69c25a7e4a7a088c22e5a0fb25e3a6f53ae209c95fb203",
+      "origin": "standalone-extraction-or-shell"
+    }
+  ],
+  "digest_algorithm": "SHA256 of UTF-8 sorted path + NUL + file SHA256 joined by LF, paths exclude QA/dist/generated manifests"
+}

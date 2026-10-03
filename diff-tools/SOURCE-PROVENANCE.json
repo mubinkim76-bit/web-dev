@@ -1,0 +1,146 @@
+[
+  {
+    "path": "LICENSE.md",
+    "bytes": 214,
+    "sha256": "2c0cf82cd75483be5b6210f38a8fce0318f99cfc901b2cc5b6b00ad78111ff77",
+    "origin": "standalone-extraction-or-shell"
+  },
+  {
+    "path": "README.md",
+    "bytes": 2305,
+    "sha256": "18a0107dbbb9c1769d6cc9e15d787debd5383032b7e3cf29f3f54e4e5538cb0f",
+    "origin": "standalone-public-run-instructions"
+  },
+  {
+    "path": "THIRD_PARTY_NOTICES.md",
+    "bytes": 257,
+    "sha256": "de55f3d982d07cd5fe747e8b1a03127cf69de25245ce3e38d5817794358fe8a7",
+    "origin": "standalone-extraction-or-shell"
+  },
+  {
+    "path": "_headers",
+    "bytes": 361,
+    "sha256": "ef31450f5ebd89a9dd027726b67e89dfa2ae61fe3fb5f4c433edc6e15cb349fa",
+    "origin": "standalone-extraction-or-shell"
+  },
+  {
+    "path": "index.html",
+    "bytes": 840,
+    "sha256": "2063015348c970ed6aabb2e461620e05089432a37c1259e51b8a32549af88d18",
+    "origin": "standalone-extraction-or-shell"
+  },
+  {
+    "path": "package.json",
+    "bytes": 509,
+    "sha256": "8cb093e8587a3dde4c20be20ae586a3503baf300785a5b40327ebdb26fcc9a0a",
+    "origin": "standalone-extraction-or-shell"
+  },
+  {
+    "path": "public/favicon.svg",
+    "bytes": 169,
+    "sha256": "3055ddb5cbd6d44b47d103cf785a6947e448a2bd4586c2924a76f96f4ac08300",
+    "origin": "v0.2.3-byte-identical"
+  },
+  {
+    "path": "public/fonts/LICENSE.txt",
+    "bytes": 14712,
+    "sha256": "849f4ea9c214fa4ac3593b770c699f387534b11ce671264c1b10d85bdcb5997b",
+    "origin": "v0.2.3-byte-identical"
+  },
+  {
+    "path": "public/fonts/NotoSansKR-Local.woff",
+    "bytes": 1414940,
+    "sha256": "9919ef940fa7a362afea051ef1fe736dbf88b5a031af8ea98e698a82b27268b0",
+    "origin": "v0.2.3-byte-identical"
+  },
+  {
+    "path": "scripts/build.mjs",
+    "bytes": 297,
+    "sha256": "613d325dd7f66eaa9dd47fb3a0ad1a85e68f1feddeb3062c385a0b50390aa0f1",
+    "origin": "standalone-extraction-or-shell"
+  },
+  {
+    "path": "scripts/check.mjs",
+    "bytes": 441,
+    "sha256": "9d15a32b8cd68b1d234d5e975d24fd20b48ce016c1bb6202a6d9b98d54561496",
+    "origin": "standalone-extraction-or-shell"
+  },
+  {
+    "path": "scripts/serve.mjs",
+    "bytes": 1401,
+    "sha256": "08b3955205cc2ee03cf66dc5d6fcb248d27240b4aa0511794086b6f9f570e384",
+    "origin": "standalone-extraction-or-shell"
+  },
+  {
+    "path": "scripts/test.mjs",
+    "bytes": 195,
+    "sha256": "bd4a1a8b794667854dec2e81fe5889fe7c8a141dd0b83f675374c789c9091e21",
+    "origin": "standalone-extraction-or-shell"
+  },
+  {
+    "path": "src/app.js",
+    "bytes": 1980,
+    "sha256": "2006f722252a0c672150c711b231f697e180305efeceecdacaac87b146647a1b",
+    "origin": "standalone-extraction-or-shell"
+  },
+  {
+    "path": "src/event-contract.js",
+    "bytes": 1428,
+    "sha256": "552e3b0edbe6f6d548dc089fa1db68e8985b1f28f5f9da7091f8f6ddaabebb6f",
+    "origin": "standalone-extraction-or-shell"
+  },
+  {
+    "path": "src/measurement.js",
+    "bytes": 2435,
+    "sha256": "3afa8f97ab34dbcf59e646a59634c731f239ed6cb9ad1a1ccdfb64c7acafdc16",
+    "origin": "standalone-extraction-or-shell"
+  },
+  {
+    "path": "src/shared.js",
+    "bytes": 2647,
+    "sha256": "617c99beb42034711186a45e95bd35ce357e871e67f34df25920253e7056d2dd",
+    "origin": "v0.2.3-byte-identical"
+  },
+  {
+    "path": "src/styles.css",
+    "bytes": 4495,
+    "sha256": "dddbe1235e857b9139158ce33543fa57623016ccad847226ce03699379c382ec",
+    "origin": "standalone-extraction-or-shell"
+  },
+  {
+    "path": "src/tools/data-core.js",
+    "bytes": 8395,
+    "sha256": "86fb7ff33a5ef56e61e316ac71887c8de56d45c73de38b3c31c15bcfbc006934",
+    "origin": "standalone-extraction-or-shell"
+  },
+  {
+    "path": "src/tools/data-tools.js",
+    "bytes": 18838,
+    "sha256": "23d91ebafd37bf2d8ddb4bff212a8682c4c0fc4ae97d17c1c73584f66f7469e2",
+    "origin": "standalone-extraction-or-shell"
+  },
+  {
+    "path": "src/tools/data-worker.js",
+    "bytes": 581,
+    "sha256": "82ec6fe8641a06a8a0986b845d32c2a7829dd9eb416bb6b34798639c560444d1",
+    "origin": "standalone-extraction-or-shell"
+  },
+  {
+    "path": "tests/data-core.test.mjs",
+    "bytes": 4491,
+    "sha256": "6d6023d1453e2e4386b1dfaff2250e286f5d4aa70e27f2ac35102d616f32ac25",
+    "origin": "standalone-extraction-or-shell"
+  },
+  {
+    "path": "tests/data-ui.test.mjs",
+    "bytes": 5271,
+    "sha256": "f756b10ad191f063f04badc08aea751e3b53b8145b511d58a2d7b6544fcea196",
+    "origin": "standalone-extraction-or-shell"
+  },
+  {
+    "path": "tests/mount-contract.test.mjs",
+    "bytes": 3135,
+    "sha256": "4b1b06fb4c5d5eee6ad4a2022000ca1d1f92f16bacde08e05fa93da7e196ac09",
+    "origin": "standalone-extraction-or-shell"
+  }
+]

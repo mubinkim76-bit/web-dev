@@ -1,0 +1,146 @@
+[
+  {
+    "path": "LICENSE.md",
+    "bytes": 214,
+    "sha256": "2c0cf82cd75483be5b6210f38a8fce0318f99cfc901b2cc5b6b00ad78111ff77",
+    "origin": "standalone-extraction-or-shell"
+  },
+  {
+    "path": "README.md",
+    "bytes": 2311,
+    "sha256": "4918edb71bcfce56158b1a7d7742faff2c42b6d85e7116f85012aad48c737de8",
+    "origin": "standalone-public-run-instructions"
+  },
+  {
+    "path": "THIRD_PARTY_NOTICES.md",
+    "bytes": 257,
+    "sha256": "de55f3d982d07cd5fe747e8b1a03127cf69de25245ce3e38d5817794358fe8a7",
+    "origin": "standalone-extraction-or-shell"
+  },
+  {
+    "path": "_headers",
+    "bytes": 361,
+    "sha256": "ef31450f5ebd89a9dd027726b67e89dfa2ae61fe3fb5f4c433edc6e15cb349fa",
+    "origin": "standalone-extraction-or-shell"
+  },
+  {
+    "path": "index.html",
+    "bytes": 849,
+    "sha256": "464b5f427fa46f6ebed1f90251f56ab67994486972b4e1431516c3b80a13b2e1",
+    "origin": "standalone-extraction-or-shell"
+  },
+  {
+    "path": "package.json",
+    "bytes": 506,
+    "sha256": "0a949dc76b7c4ea4c1ae0172f76a51ec458076ddd3df53d4f918e15c3f411833",
+    "origin": "standalone-extraction-or-shell"
+  },
+  {
+    "path": "public/favicon.svg",
+    "bytes": 169,
+    "sha256": "3055ddb5cbd6d44b47d103cf785a6947e448a2bd4586c2924a76f96f4ac08300",
+    "origin": "v0.2.3-byte-identical"
+  },
+  {
+    "path": "public/fonts/LICENSE.txt",
+    "bytes": 14712,
+    "sha256": "849f4ea9c214fa4ac3593b770c699f387534b11ce671264c1b10d85bdcb5997b",
+    "origin": "v0.2.3-byte-identical"
+  },
+  {
+    "path": "public/fonts/NotoSansKR-Local.woff",
+    "bytes": 1414940,
+    "sha256": "9919ef940fa7a362afea051ef1fe736dbf88b5a031af8ea98e698a82b27268b0",
+    "origin": "v0.2.3-byte-identical"
+  },
+  {
+    "path": "scripts/build.mjs",
+    "bytes": 297,
+    "sha256": "613d325dd7f66eaa9dd47fb3a0ad1a85e68f1feddeb3062c385a0b50390aa0f1",
+    "origin": "standalone-extraction-or-shell"
+  },
+  {
+    "path": "scripts/check.mjs",
+    "bytes": 441,
+    "sha256": "9d15a32b8cd68b1d234d5e975d24fd20b48ce016c1bb6202a6d9b98d54561496",
+    "origin": "standalone-extraction-or-shell"
+  },
+  {
+    "path": "scripts/serve.mjs",
+    "bytes": 1401,
+    "sha256": "08b3955205cc2ee03cf66dc5d6fcb248d27240b4aa0511794086b6f9f570e384",
+    "origin": "standalone-extraction-or-shell"
+  },
+  {
+    "path": "scripts/test.mjs",
+    "bytes": 195,
+    "sha256": "bd4a1a8b794667854dec2e81fe5889fe7c8a141dd0b83f675374c789c9091e21",
+    "origin": "standalone-extraction-or-shell"
+  },
+  {
+    "path": "src/app.js",
+    "bytes": 1997,
+    "sha256": "546aa9da9243a55dd196b37419ffbd495b06830ba07fc58761739a5a912e38d9",
+    "origin": "standalone-extraction-or-shell"
+  },
+  {
+    "path": "src/event-contract.js",
+    "bytes": 1402,
+    "sha256": "86fba0a29fefedb73eb6c0af0a13ce1c5a96a6a360b287841c42b3d979ae4223",
+    "origin": "standalone-extraction-or-shell"
+  },
+  {
+    "path": "src/lib/invoice-engine.js",
+    "bytes": 1944,
+    "sha256": "934f9bded5b55025ff639a39a80d76ae1a03a163c8696d93cb6b1e122bf4c8e5",
+    "origin": "v0.2.3-byte-identical"
+  },
+  {
+    "path": "src/measurement.js",
+    "bytes": 2435,
+    "sha256": "3afa8f97ab34dbcf59e646a59634c731f239ed6cb9ad1a1ccdfb64c7acafdc16",
+    "origin": "standalone-extraction-or-shell"
+  },
+  {
+    "path": "src/shared.js",
+    "bytes": 2647,
+    "sha256": "617c99beb42034711186a45e95bd35ce357e871e67f34df25920253e7056d2dd",
+    "origin": "v0.2.3-byte-identical"
+  },
+  {
+    "path": "src/styles.css",
+    "bytes": 4533,
+    "sha256": "72b6b8d2db29f3604fb0a36fde8a6e291677ef094dca9d36d81a0741ec23b6f3",
+    "origin": "standalone-extraction-or-shell"
+  },
+  {
+    "path": "src/tools/auxiliary-ui.js",
+    "bytes": 3821,
+    "sha256": "6cd9fb8d3b7d756f08a1760da7e7f68a3d1fa58ea28f891a1b43dd91a8ebe55d",
+    "origin": "v0.2.3-byte-identical"
+  },
+  {
+    "path": "src/tools/auxiliary.css",
+    "bytes": 2560,
+    "sha256": "1bf0bbfa2213d8397f01aa3150f39866a97f52792cb34e6b7f75de14b5501a8c",
+    "origin": "v0.2.3-byte-identical"
+  },
+  {
+    "path": "src/tools/invoice.js",
+    "bytes": 6766,
+    "sha256": "ccd30bd45d37727f596a87cb981f77c60e71b36706428d900aa7732e1a4192ac",
+    "origin": "v0.2.3-byte-identical"
+  },
+  {
+    "path": "tests/engine.test.mjs",
+    "bytes": 1341,
+    "sha256": "f2818a7e7c66ba4716635670e50b240ca09fcc6a0d8606eecab47a14d97c9c06",
+    "origin": "standalone-extraction-or-shell"
+  },
+  {
+    "path": "tests/mount-contract.test.mjs",
+    "bytes": 3128,
+    "sha256": "6f5d856d87a7b09f1e83f8c9053e4b9a59561a6b324ee633e999d79e3029177b",
+    "origin": "standalone-extraction-or-shell"
+  }
+]

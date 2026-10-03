@@ -1,0 +1,11 @@
+import test from 'node:test';import assert from 'node:assert/strict';import {fitGeometry,outputNames,safeName,validateSpec,sniffImage,imagePixelSize} from '../src/lib/image-core.js';
+test('contain 1200x800 to 600 square preserves aspect',()=>{assert.deepEqual([fitGeometry(1200,800,600,600).dw,fitGeometry(1200,800,600,600).dh],[600,400]);});
+test('cover crops center without changing ratio',()=>{const g=fitGeometry(1200,800,600,600,'cover');assert.equal(g.dw,600);assert.equal(g.dh,600);assert.equal(g.sx,200);assert.equal(g.cropped,true);});
+test('upscaling disabled including cover',()=>{const g=fitGeometry(200,100,600,600,'cover');assert.equal(g.dw,100);assert.equal(g.dh,100);assert.equal(g.upscaled,false);});
+test('3 images x 2 presets has 6 unique sanitized names',()=>{const out=outputNames([{name:'a.jpg'},{name:'a.jpg'},{name:'bad:name.png'}],[{id:1,name:'small',format:'image/jpeg'},{id:2,name:'large',format:'image/png'}],'site');assert.equal(out.length,6);assert.equal(new Set(out.map(x=>x.name)).size,6);assert.ok(!out.some(x=>x.name.includes(':')));});
+test('rejects invalid dimensions, quality and animation',()=>{assert.throws(()=>validateSpec({name:'a',width:15,height:600,format:'image/png',quality:1}));const b=new Uint8Array(28);b.set([137,80,78,71]);new DataView(b.buffer).setUint32(8,0);b.set([97,99,84,76],12);assert.throws(()=>sniffImage(b.buffer),/Animated/);});
+test('sanitize traversal and sniff mismatched extension by bytes',()=>{assert.equal(safeName('../x:y'),'.._x_y');assert.equal(sniffImage(Uint8Array.of(255,216,255,225).buffer),'image/jpeg');assert.throws(()=>sniffImage(new TextEncoder().encode('<svg/>').buffer));});
+test('PNG predecode dimensions detect bomb',()=>{const b=new Uint8Array(24);const v=new DataView(b.buffer);v.setUint32(16,50000);v.setUint32(20,50000);assert.deepEqual(imagePixelSize(b.buffer,'image/png'),{width:50000,height:50000});});
+test('Windows reserved names safe in ZIP directories',()=>{for(const s of ['CON','AUX','nul','COM1','LPT9','con.jpg'])assert.ok(safeName(s).startsWith('_'));});
+
+test("cover no upscale retains requested aspect on small sources",()=>{const g=fitGeometry(100,50,400,400,"cover",false);assert.equal(g.dw,50);assert.equal(g.dh,50);assert.equal(g.cropped,true);assert.equal(g.sx,25);});

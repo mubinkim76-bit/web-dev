@@ -1,0 +1,97 @@
+{
+  "service": "text-tools",
+  "version": "0.2.3-independent.1",
+  "features": [
+    "Ordered literal text cleanup",
+    "grapheme/UTF-8/word/line counts, TXT download",
+    "Worker cancellation and original restore"
+  ],
+  "limits": [
+    "Input UTF-8 1 MiB / native textarea 2000 physical lines",
+    "No semantic rewriting or document-format conversion"
+  ],
+  "policy": {
+    "free": true,
+    "account_required": false,
+    "payments": false,
+    "ads": false,
+    "server_telemetry": false,
+    "runtime_external_dependencies": false
+  },
+  "entry": "/",
+  "suggested_cloudflare_project": "p11-text-tools-27e343-261003",
+  "remote_name_checked": false,
+  "deployed": false,
+  "commands": {
+    "start": "node scripts/serve.mjs",
+    "dev": "node scripts/serve.mjs",
+    "build": "node scripts/build.mjs",
+    "preview": "node scripts/serve.mjs --dist",
+    "lint": "node --experimental-vm-modules scripts/check.mjs",
+    "test": "node scripts/test.mjs",
+    "check": "npm run lint && npm test && npm run build"
+  },
+  "qa": {
+    "node": {
+      "service": "text-tools",
+      "node": "20.20.2",
+      "siblings_present": false,
+      "steps": [
+        {
+          "step": "lint",
+          "exit_code": 0,
+          "test_cases": null
+        },
+        {
+          "step": "test",
+          "exit_code": 0,
+          "test_cases": 8
+        },
+        {
+          "step": "build",
+          "exit_code": 0,
+          "test_cases": null
+        }
+      ],
+      "status": "PASS",
+      "test_cases": 8,
+      "test_files_failed": 0
+    },
+    "browser": [
+      {
+        "name": "text output, download, cancellation and rerun",
+        "status": "PASS",
+        "detail": "Unicode/TXT parity, real Worker cancellation, rerun and clear"
+      },
+      {
+        "name": "Korean/English at 1440, 390 and 320 pixels",
+        "status": "PASS",
+        "detail": [
+          "ko-1440.png",
+          "ko-390.png",
+          "ko-320.png",
+          "en-1440.png",
+          "en-390.png",
+          "en-320.png"
+        ]
+      },
+      {
+        "name": "standalone browser dependencies and zero external traffic",
+        "status": "PASS",
+        "detail": {
+          "page_errors": [],
+          "requests": 77,
+          "external_requests": 0,
+          "server_posts": 0,
+          "siblings_present": false
+        }
+      }
+    ]
+  },
+  "not_run": [
+    "physical mobile",
+    "native print dialog/physical print",
+    "Firefox/WebKit/Edge/Safari",
+    "production Cloudflare TLS/CDN"
+  ]
+}

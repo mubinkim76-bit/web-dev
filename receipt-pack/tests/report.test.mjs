@@ -1,0 +1,6 @@
+import test from 'node:test';import assert from 'node:assert/strict';import {reportLayout,isISODate,matchCaptions,wrapText} from '../src/lib/report-core.js';
+test('13 photos four per page makes four pages',()=>assert.equal(reportLayout(13,{perPage:4}).pages,4));
+test('A4 and Letter cell bounds are within margins',()=>{for(const paper of ['A4','Letter'])for(const perPage of [2,4,6]){const l=reportLayout(30,{paper,perPage});assert.ok(l.cells.every(c=>c.x>=l.margin&&c.x+c.width<=l.width-l.margin+1&&c.y+c.height<l.height));}});
+test('dates are real ISO dates',()=>{assert.equal(isISODate('2024-02-29'),true);assert.equal(isISODate('2025-02-29'),false);assert.equal(isISODate('2024-13-01'),false);assert.equal(isISODate('01/02'),false);});
+test('caption exact names, duplicates never attach implicitly',()=>{const items=[{file:{name:'one.jpg'}},{file:{name:'two.jpg'}},{file:{name:'two.jpg'}}];const result=matchCaptions(items,[{file_name:'one.jpg',caption:'x'},{file_name:'one.jpg',caption:'y'},{file_name:'two.jpg',caption:'bad'},{file_name:'absent.jpg',caption:'no'}]);assert.equal(result.updates.length,0);assert.equal(result.issues.length,3);});
+test('Korean captions wrap without lost characters',()=>{const c={measureText:s=>({width:Array.from(s).length*10})};const input='한글 캡션😀입니다';assert.equal(wrapText(c,input,40).join(''),input);});

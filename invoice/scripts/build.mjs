@@ -1,0 +1,1 @@
+import fs from 'node:fs';fs.rmSync('dist',{recursive:true,force:true});fs.mkdirSync('dist');for(const p of ['index.html','src','public','_headers','LICENSE.md','THIRD_PARTY_NOTICES.md'])if(fs.existsSync(p))fs.cpSync(p,`dist/${p}`,{recursive:true});console.log('Built independent static project');

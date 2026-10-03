@@ -1,0 +1,165 @@
+{
+  "service": "text-tools",
+  "folder": "text-tools",
+  "module": "data-tools",
+  "mount": "mountText",
+  "entry": "/",
+  "runtime": "Node >=20, no install",
+  "build_output": "dist",
+  "siblings_required": false,
+  "runtime_js_modules": 7,
+  "static_vendor_scripts": [],
+  "public_deployment": false,
+  "source_tree_sha256": "c5f9d3c933fed1d3c911c781cb918f852949e40500dacbab1b8dda2e6ccac16e",
+  "manifest": "PROJECT-MANIFEST.json",
+  "spec": "SPEC.json",
+  "node_test_cases": 8,
+  "browser_groups": 3,
+  "source_files": [
+    {
+      "path": "LICENSE.md",
+      "bytes": 214,
+      "sha256": "2c0cf82cd75483be5b6210f38a8fce0318f99cfc901b2cc5b6b00ad78111ff77",
+      "origin": "standalone-extraction-or-shell"
+    },
+    {
+      "path": "README.md",
+      "bytes": 2320,
+      "sha256": "9968fcde8bf8fca099891af6f9b331c7f09c796c28a58a8ea1c4556a8dbdbde6",
+      "origin": "standalone-public-run-instructions"
+    },
+    {
+      "path": "THIRD_PARTY_NOTICES.md",
+      "bytes": 257,
+      "sha256": "de55f3d982d07cd5fe747e8b1a03127cf69de25245ce3e38d5817794358fe8a7",
+      "origin": "standalone-extraction-or-shell"
+    },
+    {
+      "path": "_headers",
+      "bytes": 361,
+      "sha256": "ef31450f5ebd89a9dd027726b67e89dfa2ae61fe3fb5f4c433edc6e15cb349fa",
+      "origin": "standalone-extraction-or-shell"
+    },
+    {
+      "path": "index.html",
+      "bytes": 855,
+      "sha256": "dbf12bd9b86be5a3470ed2a1f29f25e5e92c229f79d5f8b59403cdde593d0917",
+      "origin": "standalone-extraction-or-shell"
+    },
+    {
+      "path": "package.json",
+      "bytes": 509,
+      "sha256": "f48d883c3873ad598dedce605d136f889b43216c4ad31fde3c1c8348a1d9adbc",
+      "origin": "standalone-extraction-or-shell"
+    },
+    {
+      "path": "public/favicon.svg",
+      "bytes": 169,
+      "sha256": "3055ddb5cbd6d44b47d103cf785a6947e448a2bd4586c2924a76f96f4ac08300",
+      "origin": "v0.2.3-byte-identical"
+    },
+    {
+      "path": "public/fonts/LICENSE.txt",
+      "bytes": 14712,
+      "sha256": "849f4ea9c214fa4ac3593b770c699f387534b11ce671264c1b10d85bdcb5997b",
+      "origin": "v0.2.3-byte-identical"
+    },
+    {
+      "path": "public/fonts/NotoSansKR-Local.woff",
+      "bytes": 1414940,
+      "sha256": "9919ef940fa7a362afea051ef1fe736dbf88b5a031af8ea98e698a82b27268b0",
+      "origin": "v0.2.3-byte-identical"
+    },
+    {
+      "path": "scripts/build.mjs",
+      "bytes": 297,
+      "sha256": "613d325dd7f66eaa9dd47fb3a0ad1a85e68f1feddeb3062c385a0b50390aa0f1",
+      "origin": "standalone-extraction-or-shell"
+    },
+    {
+      "path": "scripts/check.mjs",
+      "bytes": 441,
+      "sha256": "9d15a32b8cd68b1d234d5e975d24fd20b48ce016c1bb6202a6d9b98d54561496",
+      "origin": "standalone-extraction-or-shell"
+    },
+    {
+      "path": "scripts/serve.mjs",
+      "bytes": 1401,
+      "sha256": "08b3955205cc2ee03cf66dc5d6fcb248d27240b4aa0511794086b6f9f570e384",
+      "origin": "standalone-extraction-or-shell"
+    },
+    {
+      "path": "scripts/test.mjs",
+      "bytes": 195,
+      "sha256": "bd4a1a8b794667854dec2e81fe5889fe7c8a141dd0b83f675374c789c9091e21",
+      "origin": "standalone-extraction-or-shell"
+    },
+    {
+      "path": "src/app.js",
+      "bytes": 2025,
+      "sha256": "9d1e58f285fed3b14e0fea62ac131f52573f184e061fc39e02231c4a691d4b21",
+      "origin": "standalone-extraction-or-shell"
+    },
+    {
+      "path": "src/event-contract.js",
+      "bytes": 1441,
+      "sha256": "c9b4414b81a1a308161178c5ec11d20de234159e9545138ec6468c9508c7aa91",
+      "origin": "standalone-extraction-or-shell"
+    },
+    {
+      "path": "src/measurement.js",
+      "bytes": 2435,
+      "sha256": "3afa8f97ab34dbcf59e646a59634c731f239ed6cb9ad1a1ccdfb64c7acafdc16",
+      "origin": "standalone-extraction-or-shell"
+    },
+    {
+      "path": "src/shared.js",
+      "bytes": 2647,
+      "sha256": "617c99beb42034711186a45e95bd35ce357e871e67f34df25920253e7056d2dd",
+      "origin": "v0.2.3-byte-identical"
+    },
+    {
+      "path": "src/styles.css",
+      "bytes": 4495,
+      "sha256": "dddbe1235e857b9139158ce33543fa57623016ccad847226ce03699379c382ec",
+      "origin": "standalone-extraction-or-shell"
+    },
+    {
+      "path": "src/tools/data-core.js",
+      "bytes": 2587,
+      "sha256": "634c19c77000a1833f91ed8abd26bc7f3c46241f2529f7bbb836559299ff8617",
+      "origin": "standalone-extraction-or-shell"
+    },
+    {
+      "path": "src/tools/data-tools.js",
+      "bytes": 17350,
+      "sha256": "439fdfa57ca0247606ea38733e4064f8c54e0d1c60382bfa3a4cbc64f642f7b8",
+      "origin": "standalone-extraction-or-shell"
+    },
+    {
+      "path": "src/tools/data-worker.js",
+      "bytes": 412,
+      "sha256": "138007ca960ddd00b9b3ecb18250f066036134a4ed6157bb3eedc91958745e83",
+      "origin": "standalone-extraction-or-shell"
+    },
+    {
+      "path": "tests/data-core.test.mjs",
+      "bytes": 1642,
+      "sha256": "0b65cf0730648a4a7f88958218dc1fd846dbb04562109613a8f7c07219ae9cb1",
+      "origin": "standalone-extraction-or-shell"
+    },
+    {
+      "path": "tests/data-ui.test.mjs",
+      "bytes": 6197,
+      "sha256": "08d72b66ff9ce715a080c50ae1f5581fb81c167f6e7e989b12fc46dafe52d231",
+      "origin": "standalone-extraction-or-shell"
+    },
+    {
+      "path": "tests/mount-contract.test.mjs",
+      "bytes": 3135,
+      "sha256": "10d9f0ffada0fd70ef952598b251d4751754db6b6172b51165931b0a307f6aa0",
+      "origin": "standalone-extraction-or-shell"
+    }
+  ],
+  "digest_algorithm": "SHA256 of UTF-8 sorted path + NUL + file SHA256 joined by LF, paths exclude QA/dist/generated manifests"
+}

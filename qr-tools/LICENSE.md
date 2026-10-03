@@ -1,0 +1,1 @@
+Project source is extracted from the user-provided v0.2.3 release. Original owner rights remain unchanged; no new open-source distribution license is granted. Third-party components retain their included licenses.

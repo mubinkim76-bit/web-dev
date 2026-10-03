@@ -1,0 +1,153 @@
+{
+  "service": "quantity",
+  "version": "0.2.3-independent.1",
+  "features": [
+    "Tile/paint package quantity with units/waste/coats",
+    "exact aggregate-before-ceiling and cost",
+    "CSV output and print document"
+  ],
+  "limits": [
+    "1–20 rooms; positive area/coverage; paint coats 1–10",
+    "Estimates only; no engineering/structural suitability decision"
+  ],
+  "policy": {
+    "free": true,
+    "account_required": false,
+    "payments": false,
+    "ads": false,
+    "server_telemetry": false,
+    "runtime_external_dependencies": false
+  },
+  "entry": "/",
+  "suggested_cloudflare_project": "p11-quantity-27e343-261003",
+  "remote_name_checked": false,
+  "deployed": false,
+  "commands": {
+    "start": "node scripts/serve.mjs",
+    "dev": "node scripts/serve.mjs",
+    "build": "node scripts/build.mjs",
+    "preview": "node scripts/serve.mjs --dist",
+    "lint": "node --experimental-vm-modules scripts/check.mjs",
+    "test": "node scripts/test.mjs",
+    "check": "npm run lint && npm test && npm run build"
+  },
+  "qa": {
+    "node": {
+      "service": "quantity",
+      "node": "20.20.2",
+      "siblings_present": false,
+      "steps": [
+        {
+          "step": "lint",
+          "exit_code": 0,
+          "test_cases": null
+        },
+        {
+          "step": "test",
+          "exit_code": 0,
+          "test_cases": 3
+        },
+        {
+          "step": "build",
+          "exit_code": 0,
+          "test_cases": null
+        }
+      ],
+      "status": "PASS",
+      "test_cases": 3,
+      "test_files_failed": 0
+    },
+    "browser": [
+      {
+        "name": "quantity ceiling, CSV, invalid input and print rendering",
+        "status": "PASS",
+        "detail": {
+          "ceil_packages": 10,
+          "csv_rows": [
+            [
+              "room",
+              "area",
+              "m2"
+            ],
+            [
+              "Room 1",
+              "88",
+              "m2"
+            ],
+            [
+              "Room 2",
+              "12",
+              "m2"
+            ],
+            [
+              "total_area",
+              "100",
+              "m2"
+            ],
+            [
+              "waste_percent",
+              "10",
+              "%"
+            ],
+            [
+              "coats",
+              "1",
+              ""
+            ],
+            [
+              "needed_area",
+              "110.00000000000001",
+              "m2"
+            ],
+            [
+              "coverage_per_pack",
+              "12",
+              "m2"
+            ],
+            [
+              "packs_rounded_up",
+              "10",
+              "packs"
+            ],
+            [
+              "estimated_cost",
+              "0",
+              "user_currency"
+            ]
+          ],
+          "printed_pages": 1,
+          "native_print_dialog": "NOT RUN"
+        }
+      },
+      {
+        "name": "Korean/English at 1440, 390 and 320 pixels",
+        "status": "PASS",
+        "detail": [
+          "ko-1440.png",
+          "ko-390.png",
+          "ko-320.png",
+          "en-1440.png",
+          "en-390.png",
+          "en-320.png"
+        ]
+      },
+      {
+        "name": "standalone browser dependencies and zero external traffic",
+        "status": "PASS",
+        "detail": {
+          "page_errors": [],
+          "requests": 84,
+          "external_requests": 0,
+          "server_posts": 0,
+          "siblings_present": false
+        }
+      }
+    ]
+  },
+  "not_run": [
+    "physical mobile",
+    "native print dialog/physical print",
+    "Firefox/WebKit/Edge/Safari",
+    "production Cloudflare TLS/CDN"
+  ]
+}

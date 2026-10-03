@@ -1,0 +1,19 @@
+{
+  "name": "image-batch",
+  "version": "0.2.3-independent.1",
+  "private": true,
+  "type": "module",
+  "license": "UNLICENSED",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "start": "node scripts/serve.mjs",
+    "dev": "node scripts/serve.mjs",
+    "build": "node scripts/build.mjs",
+    "preview": "node scripts/serve.mjs --dist",
+    "lint": "node --experimental-vm-modules scripts/check.mjs",
+    "test": "node scripts/test.mjs",
+    "check": "npm run lint && npm test && npm run build"
+  }
+}

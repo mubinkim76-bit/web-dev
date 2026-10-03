@@ -1,0 +1,19 @@
+const cache=new Map();
+export function formatter(zone) {if(!cache.has(zone)){if(cache.size>128)cache.clear();cache.set(zone,new Intl.DateTimeFormat('en-CA',{timeZone:zone,year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',second:'2-digit',hourCycle:'h23'}));}return cache.get(zone);}
+export function zonedParts(ms,zone){const obj={};for(const p of formatter(zone).formatToParts(new Date(ms)))if(p.type!=='literal')obj[p.type]=Number(p.value);return obj;}
+export function localStamp(ms,zone){const p=zonedParts(ms,zone),pad=n=>String(n).padStart(2,'0');return `${p.year}-${pad(p.month)}-${pad(p.day)} ${pad(p.hour)}:${pad(p.minute)}`;}
+function parseLocal(local){const m=/^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2})$/.exec(local);if(!m)throw new Error('LOCAL_FORMAT');const [y,mo,d,h,mi]=m.slice(1).map(Number);if(y<1970||y>2100||mo<1||mo>12||d<1||d>31||h>23||mi>59)throw new Error('LOCAL_RANGE');const ms=Date.UTC(y,mo-1,d,h,mi);const a=new Date(ms);if(a.getUTCMonth()!==mo-1||a.getUTCDate()!==d)throw new Error('LOCAL_RANGE');return ms;}
+export function resolveLocal(local,zone){const target=parseLocal(local);formatter(zone);const offsets=new Set();for(let h=-36;h<=36;h+=3){const ms=target+h*3600000,p=zonedParts(ms,zone);offsets.add(Date.UTC(p.year,p.month-1,p.day,p.hour,p.minute,p.second)-ms);}
+ const matches=[...offsets].map(o=>target-o).filter(ms=>localStamp(ms,zone).replace(' ','T')===local).sort((a,b)=>a-b);return [...new Set(matches)];}
+export function parseClock(s){if(!/^\d{2}:\d{2}$/.test(s))throw new Error('CLOCK');const [h,m]=s.split(':').map(Number);if(h>23||m>59)throw new Error('CLOCK');return h*60+m;}
+export function findOverlaps(from,zones,duration=60,days=7,max=30){if(!Number.isFinite(from)||!Number.isInteger(duration)||duration<30||duration>240||duration%30||!Number.isInteger(days)||days<1||days>7||!Number.isInteger(max)||max<1||max>30)throw new Error('RANGE');if(!Array.isArray(zones)||!zones.length||zones.length>6)throw new Error('ZONE_LIMIT');const rows=zones.map(z=>{formatter(z.zone);const start=parseClock(z.start),end=parseClock(z.end);if(start===end)throw new Error('HOURS_EQUAL');return {...z,start,end};});const fits=(ms,z)=>{const p=zonedParts(ms,z.zone),minute=p.hour*60+p.minute;return z.start<z.end?minute>=z.start&&minute<z.end:minute>=z.start||minute<z.end;};
+ const first=Math.ceil(from/1800000)*1800000,minutes=Math.floor((from+days*86400000-first)/60000);
+ const available=new Uint8Array(minutes);available.fill(1);
+ for(const z of rows)for(let i=0;i<minutes;i++)if(available[i]&&!fits(first+i*60000,z))available[i]=0;
+ const blocked=new Uint32Array(minutes+1);for(let i=0;i<minutes;i++)blocked[i+1]=blocked[i]+(available[i]?0:1);
+ const results=[];for(let i=0;i+duration<=minutes;i+=30)if(blocked[i+duration]===blocked[i]){results.push(first+i*60000);if(results.length>=max)break;}return results;}
+
+export function escapeIcs(s){return String(s).replaceAll('\\','\\\\').replace(/\r\n|\r|\n/g,'\\n').replaceAll(';','\\;').replaceAll(',','\\,');}
+export function foldIcs(line){let out='',part='',count=0;for(const c of line){const n=new TextEncoder().encode(c).length;if(count+n>75){out+=part+'\r\n';part=' ';count=1;}part+=c;count+=n;}return out+part;}
+const utcStamp=ms=>new Date(ms).toISOString().replace(/[-:]/g,'').replace(/\.\d{3}Z$/,'Z');
+export function makeIcs(start,duration=60,title='Meeting',uid='local-meeting',now=Date.now()){if(!Number.isFinite(start)||!Number.isFinite(now)||!Number.isInteger(duration)||duration<1||duration>1440||String(title).length>200||!/^[\w-]{1,100}$/.test(uid))throw new Error('ICS_INPUT');return ['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//Local Utility Platform//Time planner//EN','CALSCALE:GREGORIAN','BEGIN:VEVENT',`UID:${uid}@local.utility`,`DTSTAMP:${utcStamp(now)}`,`DTSTART:${utcStamp(start)}`,`DTEND:${utcStamp(start+duration*60000)}`,`SUMMARY:${escapeIcs(title)}`,'END:VEVENT','END:VCALENDAR'].map(foldIcs).join('\r\n')+'\r\n';}
