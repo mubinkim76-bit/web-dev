@@ -49,6 +49,29 @@ function setup() {
 }
 const { mountText } = await import('../src/tools/data-tools.js');
 
+test('Rejected TXT imports preserve the original and a later valid import recovers', async () => {
+  const { root } = setup(); const cleanup = mountText(root, { lang: 'en' });
+  const source = byAria(root, 'Original text'); source.value = 'keep original'; source.dispatch('input');
+  const input = labelled(root, 'Open UTF-8 TXT');
+  const invalid = [
+    { name: 'wrong.csv', size: 1, arrayBuffer: async () => new Uint8Array([65]).buffer },
+    { name: 'large.txt', size: 1048577, arrayBuffer: async () => new ArrayBuffer(0) },
+    { name: 'invalid.txt', size: 2, arrayBuffer: async () => new Uint8Array([0xc3, 0x28]).buffer },
+    { name: 'lines.txt', size: 4000, arrayBuffer: async () => new TextEncoder().encode('x\n'.repeat(2000)).buffer },
+  ];
+  for (const file of invalid) {
+    input.files = [file]; input.dispatch('change'); await settle();
+    assert.equal(source.value, 'keep original');
+    assert.match(search(root, node => node.attrs.role === 'status').textContent, /^Error/);
+    assert.equal(byText(root, 'button', 'Download TXT').disabled, true);
+  }
+  input.files = [{ name: 'valid.txt', size: 3, arrayBuffer: async () => new TextEncoder().encode('new').buffer }];
+  input.dispatch('change'); await settle(); assert.equal(source.value, 'new');
+  byText(root, 'button', 'Clean text').click(); await settle();
+  assert.equal(byAria(root, 'Cleaned text').value, 'new');
+  assert.equal(byText(root, 'button', 'Download TXT').disabled, false); cleanup();
+});
+
 test('Text module mounts, cleans, marks dirty, restores and clears without stale results', async () => {
   const { root, dirty } = setup(); const cleanup = mountText(root, { lang: 'en' });
   const source = byAria(root, 'Original text'); source.value = '  한글  \n  한글  '; source.dispatch('input');

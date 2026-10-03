@@ -27,7 +27,7 @@ try:
  with sync_playwright() as p:
   browser=p.chromium.launch(executable_path=os.environ.get('CHROMIUM_PATH','/usr/bin/chromium'),headless=True,chromium_sandbox=True)
   context=browser.new_context(viewport={'width':1440,'height':1000},accept_downloads=True)
-  page=context.new_page();page.on('dialog',lambda d:d.accept());errors=[];requests=[];responses=[]
+  page=context.new_page();accept_dialog=lambda d:d.accept();page.on('dialog',accept_dialog);errors=[];requests=[];responses=[]
   page.on('pageerror',lambda e:errors.append(str(e)));page.on('request',lambda r:requests.append([r.method,r.url]));page.on('response',lambda r:responses.append([r.status,r.url]))
   def go(lang='ko'):
    page.goto(base+('/?lang=en' if lang=='en' else '/'));page.locator('.workspace').wait_for();page.evaluate('document.fonts.ready')
@@ -47,6 +47,36 @@ try:
    btn('Clean text').click();expect(page.get_by_label('Cleaned text',exact=True)).to_have_value('한글\ne\u0301 👨‍👩‍👧‍👦');path=save('Download TXT','cleaned.txt');assert path.read_text()=='한글\ne\u0301 👨‍👩‍👧‍👦'
    page.get_by_label('Original text',exact=True).fill('x\n'*1000);page.evaluate("()=>{const b=[...document.querySelectorAll('button')];b.find(x=>x.textContent==='Clean text').click();b.find(x=>x.textContent==='Cancel').click()}");expect(page.locator('.workspace [role=status]')).to_contain_text('Cancelled');btn('Clean text').click();expect(btn('Download TXT')).to_be_enabled();btn('Clear all').click();expect(page.get_by_label('Original text',exact=True)).to_have_value('');return 'Unicode/TXT parity, real Worker cancellation, rerun and clear'
   record('text output, download, cancellation and rerun',functional)
+  def errors_and_recovery():
+   go('en');source=page.get_by_label('Original text',exact=True);source.fill('preserve me')
+   invalid=[('wrong.csv',b'a','Choose a TXT file'),('large.txt',b'x'*1048577,'File limit'),('invalid.txt',bytes([0xc3,0x28]),'UTF-8 decoding failed'),('lines.txt',b'x\n'*2000,'2,000 lines')]
+   for name,data,message in invalid:
+    page.locator('input[type=file]').set_input_files({'name':name,'mimeType':'text/plain','buffer':data})
+    expect(page.locator('.workspace [role=status]')).to_contain_text(message)
+    expect(source).to_have_value('preserve me');expect(btn('Download TXT')).to_be_disabled()
+   page.screenshot(path=OUT/'input-error.png',full_page=True)
+   page.locator('input[type=file]').set_input_files({'name':'valid.txt','mimeType':'text/plain','buffer':'  한글  '.encode()})
+   expect(source).to_have_value('  한글  ');page.get_by_label('Trim each line',exact=True).check();btn('Clean text').click()
+   expect(page.get_by_label('Cleaned text',exact=True)).to_have_value('한글')
+   path=save('Download TXT','recovered.txt');assert path.read_bytes()=='한글'.encode()
+   btn('Restore original').click();expect(page.get_by_label('Cleaned text',exact=True)).to_have_value('  한글  ')
+   btn('Reset rules').click();btn('Clean text').click();expect(page.get_by_label('Cleaned text',exact=True)).to_have_value('  한글  ')
+   page.screenshot(path=OUT/'recovered.png',full_page=True)
+   return 'Four rejected file inputs preserve original; valid import, TXT bytes, restore and reset recover'
+  record('invalid file inputs and successful recovery',errors_and_recovery)
+  def language_boundary():
+   go('en');source=page.get_by_label('Original text',exact=True);source.fill('unsaved')
+   page.remove_listener('dialog',accept_dialog)
+   dismiss=lambda d:d.dismiss();page.on('dialog',dismiss)
+   page.get_by_role('button',name='Change language',exact=True).click()
+   expect(source).to_have_value('unsaved');assert page.locator('html').get_attribute('lang')=='en'
+   page.remove_listener('dialog',dismiss);page.on('dialog',lambda d:d.accept())
+   page.get_by_role('button',name='Change language',exact=True).click()
+   expect(page.get_by_label('원문',exact=True)).to_have_value('');assert page.locator('html').get_attribute('lang')=='ko'
+   page.get_by_label('원문',exact=True).fill('작업');page.evaluate("()=>{const b=[...document.querySelectorAll('button')];b.find(x=>x.textContent==='정리 실행').click();document.querySelector('[aria-label=\"언어 변경\"]').click()}")
+   expect(page.get_by_label('Original text',exact=True)).to_have_value('');expect(page.get_by_label('Cleaned text',exact=True)).to_have_value('');expect(btn('Download TXT')).to_be_disabled()
+   return 'Language dialog dismiss preserves input; accept clears input; switch during worker leaves no stale result'
+  record('language navigation and active worker disposal',language_boundary)
   def responsive():
    screenshots=[]
    for lang in ['ko','en']:
