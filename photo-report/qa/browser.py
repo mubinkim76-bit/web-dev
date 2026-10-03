@@ -27,7 +27,7 @@ try:
  with sync_playwright() as p:
   browser=p.chromium.launch(executable_path=os.environ.get('CHROMIUM_PATH','/usr/bin/chromium'),headless=True,chromium_sandbox=True)
   context=browser.new_context(viewport={'width':1440,'height':1000},accept_downloads=True)
-  page=context.new_page();page.on('dialog',lambda d:d.accept());errors=[];requests=[];responses=[]
+  page=context.new_page();accept_dialog=lambda d:d.accept();page.on('dialog',accept_dialog);errors=[];requests=[];responses=[]
   page.on('pageerror',lambda e:errors.append(str(e)));page.on('request',lambda r:requests.append([r.method,r.url]));page.on('response',lambda r:responses.append([r.status,r.url]))
   def go(lang='ko'):
    page.goto(base+('/?lang=en' if lang=='en' else '/'));page.locator('.workspace').wait_for();page.evaluate('document.fonts.ready')
@@ -45,6 +45,56 @@ try:
    go('en');page.get_by_label('Choose report photos',exact=True).set_input_files([png(),jpg()]);expect(page.locator('.photo-row')).to_have_count(2);page.locator('.photo-row textarea').first.fill('합성 한글 캡션');btn('Generate all-page preview').click();expect(page.locator('.page-previews img')).to_have_count(1,timeout=30000);expect(btn('Download reviewed PDF')).to_be_disabled();page.get_by_label('I reviewed photos, captions and cropping on every page',exact=True).check();path=save('Download reviewed PDF','photo-report.pdf');doc=fitz.open(path);assert len(doc)==1;pix=doc[0].get_pixmap();pix.save(OUT/'photo-report-page.png');assert len(set(pix.samples))>20
    page.locator('.photo-row textarea').first.fill('changed');expect(btn('Download reviewed PDF')).to_be_disabled();btn('Clear all').click();expect(page.locator('.photo-row')).to_have_count(0);return {'pdf_pages':len(doc),'pdf_size':path.stat().st_size,'review_gate':'PASS','caption_edit_invalidation':'PASS'}
   record('photo/caption preview, reviewed PDF and invalidation',functional)
+  def errors_retry():
+   go('en')
+   upload=page.get_by_label('Choose report photos',exact=True)
+   upload.set_input_files({'name':'broken.png','mimeType':'image/png','buffer':b'not an image'})
+   expect(page.locator('.photo-row')).to_have_count(0)
+   expect(page.locator('.workspace [role=status]')).to_contain_text('broken.png')
+   upload.set_input_files([png()]);expect(page.locator('.photo-row')).to_have_count(1)
+   page.get_by_label('Caption CSV',exact=True).set_input_files({'name':'bad.csv','mimeType':'text/csv','buffer':b'wrong,header\nalpha.png,test'})
+   expect(page.locator('.workspace [role=status]')).to_contain_text('Headers must')
+   page.get_by_label('Caption CSV',exact=True).set_input_files({'name':'good.csv','mimeType':'text/csv','buffer':b'file_name,caption,work_date\nalpha.png,recovered,2026-10-03'})
+   expect(page.locator('.photo-row textarea')).to_have_value('recovered')
+   page.locator('.photo-row textarea').fill('x'*301);btn('Generate all-page preview').click()
+   expect(page.locator('.workspace [role=status]')).to_contain_text('300-character')
+   page.locator('.photo-row textarea').fill('recovered');btn('Generate all-page preview').click()
+   expect(page.locator('.page-previews img')).to_have_count(1,timeout=30000)
+   return {'invalid_image':'PASS','invalid_csv_then_retry':'PASS','caption_limit_then_retry':'PASS'}
+  record('consumer invalid inputs and retries',errors_retry)
+  def cancel_rerun():
+   go('en');page.get_by_label('Choose report photos',exact=True).set_input_files([png(),jpg()]);expect(page.locator('.photo-row')).to_have_count(2)
+   page.evaluate("""() => { const buttons=[...document.querySelectorAll('button')]; buttons.find(b=>b.textContent==='Generate all-page preview').click(); buttons.find(b=>b.textContent==='Cancel').click(); }""")
+   expect(btn('Generate all-page preview')).to_be_enabled(timeout=30000)
+   expect(page.locator('.page-previews img')).to_have_count(0);expect(btn('Download reviewed PDF')).to_be_disabled()
+   btn('Generate all-page preview').click();expect(page.locator('.page-previews img')).to_have_count(1,timeout=30000)
+   page.get_by_label('I reviewed photos, captions and cropping on every page',exact=True).check()
+   path=save('Download reviewed PDF','consumer-rerun.pdf');doc=fitz.open(path);assert len(doc)==1
+   btn('Clear all').click();expect(page.locator('.photo-row')).to_have_count(0);expect(btn('Download reviewed PDF')).to_be_disabled()
+   return {'cancel_then_rerun':'PASS','download_bytes':path.stat().st_size,'clear':'PASS'}
+  record('consumer preview cancellation rerun download and clear',cancel_rerun)
+  def language_boundary():
+   go('en');page.get_by_label('Choose report photos',exact=True).set_input_files([png()]);expect(page.locator('.photo-row')).to_have_count(1)
+   page.remove_listener('dialog',accept_dialog)
+   def dismiss(d):d.dismiss()
+   page.on('dialog',dismiss);btn('Change language').click();expect(page.locator('html')).to_have_attribute('lang','en');expect(page.locator('.photo-row')).to_have_count(1)
+   page.remove_listener('dialog',dismiss);page.on('dialog',accept_dialog);btn('Change language').click()
+   expect(page.locator('html')).to_have_attribute('lang','ko');expect(page.locator('.photo-row')).to_have_count(0)
+   return {'dismiss_preserves_input':'PASS','confirm_clears_input':'PASS'}
+  record('consumer language transition confirm and cancel',language_boundary)
+  def narrow_limit():
+   page.set_viewport_size({'width':320,'height':1000});go('en')
+   photos=[{**png(),'name':f'{i}.png'} for i in range(11)]
+   page.get_by_label('Choose report photos',exact=True).set_input_files(photos)
+   expect(page.locator('.workspace [role=status]')).to_contain_text('Maximum 10 images');expect(page.locator('.photo-row')).to_have_count(0)
+   page.get_by_label('Choose report photos',exact=True).set_input_files(photos[:3]);expect(page.locator('.photo-row')).to_have_count(3)
+   select_field('Layout','2');select_field('Paper','Letter');btn('Generate all-page preview').click();expect(page.locator('.page-previews img')).to_have_count(2,timeout=30000)
+   page.get_by_label('I reviewed photos, captions and cropping on every page',exact=True).check();path=save('Download reviewed PDF','consumer-letter-2pages.pdf')
+   doc=fitz.open(path);assert len(doc)==2;assert round(doc[0].rect.width)==612 and round(doc[0].rect.height)==792
+   page.screenshot(path=OUT/'consumer-320-filled.png',full_page=True);doc[0].get_pixmap().save(OUT/'consumer-letter-page.png')
+   assert page.evaluate('document.documentElement.scrollWidth <= innerWidth + 1')
+   return {'limit_recovery':'PASS','letter_pdf_pages':len(doc),'width':320}
+  record('consumer narrow limit recovery and multipage Letter download',narrow_limit)
   def responsive():
    screenshots=[]
    for lang in ['ko','en']:
