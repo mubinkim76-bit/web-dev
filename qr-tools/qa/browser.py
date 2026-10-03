@@ -27,7 +27,7 @@ try:
  with sync_playwright() as p:
   browser=p.chromium.launch(executable_path=os.environ.get('CHROMIUM_PATH','/usr/bin/chromium'),headless=True,chromium_sandbox=True)
   context=browser.new_context(viewport={'width':1440,'height':1000},accept_downloads=True)
-  page=context.new_page();page.on('dialog',lambda d:d.accept());errors=[];requests=[];responses=[]
+  page=context.new_page();dialog_decision={'accept':True};page.on('dialog',lambda d:d.accept() if dialog_decision['accept'] else d.dismiss());errors=[];requests=[];responses=[]
   page.on('pageerror',lambda e:errors.append(str(e)));page.on('request',lambda r:requests.append([r.method,r.url]));page.on('response',lambda r:responses.append([r.status,r.url]))
   def go(lang='ko'):
    page.goto(base+('/?lang=en' if lang=='en' else '/'));page.locator('.workspace').wait_for();page.evaluate('document.fonts.ready')
@@ -45,6 +45,49 @@ try:
    from decoder import decode
    go('en');select_field('Content type','text');page.get_by_label('QR data',exact=True).fill('한글 😀');btn('Generate QR').click();expect(btn('Save SVG')).to_be_enabled();svg=save('Save SVG','code.svg');assert '<svg' in svg.read_text();pngpath=save('Save PNG','code.png');im=Image.open(pngpath);im.load();found=decode(im);assert len(found)==1 and found[0]=='한글 😀';page.get_by_label('QR data',exact=True).fill('한'*167);btn('Generate QR').click();expect(page.get_by_role('alert')).to_be_visible();expect(btn('Save PNG')).to_be_disabled();return {'independent_decoder':'libzbar','decoded':'한글 😀','png_dimensions':list(im.size),'over_500_bytes':'blocked'}
   record('static QR PNG/SVG, independent decode and byte limit',functional)
+  def boundaries():
+   from decoder import decode
+   go('en');field=page.get_by_label('QR data',exact=True)
+   for value in ['', 'javascript:alert(1)', 'https://u:p@example.com', ' https://example.com', 'https://example.com/a b']:
+    field.fill(value);btn('Generate QR').click();expect(page.get_by_role('alert')).to_be_visible();expect(btn('Save PNG')).to_be_disabled();expect(btn('Save SVG')).to_be_disabled()
+   field.fill('https://example.com/a?b=1&c=2');btn('Generate QR').click();expect(btn('Save PNG')).to_be_enabled()
+   f=save('Save PNG','url.png');assert decode(Image.open(f))==['https://example.com/a?b=1&c=2']
+   field.fill('https://example.com/changed');expect(btn('Save PNG')).to_be_disabled();btn('Generate QR').click();btn('Clear').click();expect(field).to_have_value('');expect(btn('Save SVG')).to_be_disabled();expect(field).to_be_focused()
+   select_field('Content type','text');field.fill('a'*500);btn('Generate QR').click();f=save('Save PNG','500-bytes.png');assert decode(Image.open(f))==['a'*500]
+   field.fill('한'*167);btn('Generate QR').click();expect(page.get_by_role('alert')).to_be_visible();field.fill('retry 한글 😀');btn('Generate QR').click();expect(page.get_by_role('alert')).to_be_hidden()
+   for size in ['256','512','1024']:
+    select_field('Output size',size);expect(btn('Save PNG')).to_be_disabled();btn('Generate QR').click();f=save('Save PNG','size-'+size+'.png');im=Image.open(f);assert im.width>=int(size);assert decode(im)==['retry 한글 😀'];svg=save('Save SVG','size-'+size+'.svg');assert 'width="'+size+'"' in svg.read_text()
+   page.screenshot(path=OUT/'success-qr.png',full_page=True)
+   return {'invalid_inputs':5,'exact_500_bytes':'decoded','over_500_bytes':'rejected','clear_edit_rerun':'PASS','output_sizes':[256,512,1024]}
+  record('URL and text boundaries, clear, rerun, three PNG/SVG sizes',boundaries)
+  def language():
+   go('en');field=page.get_by_label('QR data',exact=True);field.fill('https://example.com/keep');btn('Generate QR').click()
+   dialog_decision['accept']=False;page.get_by_role('button',name='Change language',exact=True).click();assert page.locator('html').get_attribute('lang')=='en';expect(field).to_have_value('https://example.com/keep');expect(btn('Save PNG')).to_be_enabled()
+   dialog_decision['accept']=True;page.get_by_role('button',name='Change language',exact=True).click();assert page.locator('html').get_attribute('lang')=='ko';expect(page.get_by_label('QR에 넣을 데이터',exact=True)).to_have_value('https://example.com');expect(btn('PNG 저장')).to_be_disabled();btn('QR 생성').click();expect(btn('PNG 저장')).to_be_enabled()
+   page.get_by_role('button',name='언어 변경',exact=True).click();assert page.locator('html').get_attribute('lang')=='en'
+   return {'cancel_preserves_input_and_result':True,'accept_clears_and_remounts':True,'korean_rerun':True}
+  record('language confirmation cancel and accept, remount and rerun',language)
+  def async_cancel_and_errors():
+   go('en');downloads=[];listener=lambda d:downloads.append(d.suggested_filename);page.on('download',listener)
+   for action in ['clear','language']:
+    if page.locator('html').get_attribute('lang')!='en':go('en')
+    page.get_by_label('QR data',exact=True).fill('https://example.com/cancel');btn('Generate QR').click()
+    page.evaluate("() => {window.originalToBlob=HTMLCanvasElement.prototype.toBlob;HTMLCanvasElement.prototype.toBlob=function(cb,...args){window.originalToBlob.call(this,blob=>{window.pendingPNG=()=>cb(blob)},...args)}}")
+    btn('Save PNG').click()
+    for _ in range(100):
+     if page.evaluate('() => typeof window.pendingPNG === "function"'):break
+     page.wait_for_timeout(20)
+    assert page.evaluate('() => typeof window.pendingPNG === "function"')
+    if action=='clear':btn('Clear').click()
+    else:page.get_by_role('button',name='Change language',exact=True).click()
+    page.evaluate('() => {window.pendingPNG();window.pendingPNG=null;HTMLCanvasElement.prototype.toBlob=window.originalToBlob}');page.wait_for_timeout(250);assert not downloads,downloads
+   go('en');btn('Generate QR').click();page.evaluate('() => {window.originalToBlob=HTMLCanvasElement.prototype.toBlob;HTMLCanvasElement.prototype.toBlob=function(cb){cb(null)}}');btn('Save PNG').click();expect(page.get_by_role('alert')).to_have_text('Could not create the PNG. Please try again.');page.screenshot(path=OUT/'png-error.png',full_page=True);page.evaluate('() => {HTMLCanvasElement.prototype.toBlob=window.originalToBlob}');btn('Generate QR').click();expect(page.get_by_role('alert')).to_be_hidden();save('Save PNG','retry-after-png-error.png');assert len(downloads)==1;page.remove_listener('download',listener)
+   return {'delayed_png_cancel_on_clear':True,'delayed_png_cancel_on_language':True,'null_blob_error_and_retry':True}
+  record('pending PNG cancellation and forced export failure recovery',async_cancel_and_errors)
+  def print_document():
+   go('en');btn('Generate QR').click();pages=printed('Print / Save as PDF','qr-print.pdf','QR');assert pages==1
+   return {'print_document_pages':pages,'physical_print':'NOT_RUN'}
+  record('print document and rendered PDF',print_document)
   def responsive():
    screenshots=[]
    for lang in ['ko','en']:
