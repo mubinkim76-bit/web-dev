@@ -7,9 +7,9 @@
   },
   {
     "path": "README.md",
-    "bytes": 2314,
-    "sha256": "7b75e0eb0ad5ad93441835231853f14b51f750d1d7b9ad4a5b3441ba9087a80b",
-    "origin": "standalone-public-run-instructions"
+    "bytes": 2256,
+    "sha256": "a532454649d21e95815aa8ad3ccf4c124500b2c91b4854d1f9c00e2a338173c8",
+    "origin": "independent-service-revision"
   },
   {
     "path": "THIRD_PARTY_NOTICES.md",
@@ -19,9 +19,9 @@
   },
   {
     "path": "_headers",
-    "bytes": 361,
-    "sha256": "ef31450f5ebd89a9dd027726b67e89dfa2ae61fe3fb5f4c433edc6e15cb349fa",
-    "origin": "standalone-extraction-or-shell"
+    "bytes": 387,
+    "sha256": "4abab4a8b45fc7b178665a28c48e1b03f3ca8c9f71bd009cab4f0f43f45b704b",
+    "origin": "independent-service-revision"
   },
   {
     "path": "index.html",

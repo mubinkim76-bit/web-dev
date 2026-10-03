@@ -38,7 +38,9 @@ The build produces each project's dist/. Publish only that generated dist/ to a 
 
 ## Validation
 
-The release has 149 Node test cases and 37 actual Chromium QA groups, including 66 Korean/English screenshots at 1440, 390 and 320 pixels. Actual QA covers downloads, PDF/print-rendered output, cancellation, reruns, simultaneous imports and two-tab game storage conflicts where applicable. Historical summaries are in each SPEC.json; large outputs and internal work records are excluded. Browser scripts and prerequisites are described in each qa/README.md.
+The original source release recorded 149 Node test cases and 37 Chromium QA groups, including 66 Korean/English screenshots at 1440, 390 and 320 pixels. These historical totals predate the additional regression tests in this repository. Actual QA covers downloads, PDF/print-rendered output, cancellation, reruns, simultaneous imports and two-tab game storage conflicts where applicable. Historical summaries are in each SPEC.json; large outputs and internal work records are excluded. Browser scripts and prerequisites are described in each qa/README.md.
+
+For a fresh full repository gate, provision the browser prerequisites documented in each `qa/README.md`, then run `python3 scripts/check-all.py`. The command stops on any Node, syntax, build or browser failure and keeps generated evidence in Git-ignored QA output folders.
 
 Physical devices, native print dialogs, physical paper, other browser engines and production CDN checks remain outstanding. Node DOM tests alone do not certify actual browser behavior.
 
@@ -47,3 +49,7 @@ Apps process inputs locally and do not require accounts or payments. No server m
 ## Source and licenses
 
 PROJECTS.json and each PROJECT-MANIFEST.json describe independent source entries and hashes. PUBLICATION-MANIFEST.json lists all intended public files except itself. Read each LICENSE.md, THIRD_PARTY_NOTICES.md and bundled vendor/font license text. This publication does not grant a new license to the application source; original rights are preserved.
+
+## Verify publication hashes
+
+Run `python3 scripts/publication-manifest.py --check` to verify the current public inventory. After an authorized source edit, run `python3 scripts/publication-manifest.py` to regenerate it. Source digests exclude QA and generated metadata; `PUBLICATION-MANIFEST.json` includes public source, tests, documentation and manifests, but excludes itself and Git-ignored build/QA outputs. Stage intended files before verification so Git ignore rules and the inventory remain explicit.

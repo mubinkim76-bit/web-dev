@@ -10,7 +10,7 @@
   "runtime_js_modules": 7,
   "static_vendor_scripts": [],
   "public_deployment": false,
-  "source_tree_sha256": "5ee5442ee5537c22c698dc1d7e15a667a6baa9a5fd9b2a8e2d6c5261a06d41fc",
+  "source_tree_sha256": "1449a2c60d49d97390e2ed9f28b69dfd43f588661b26bc16ed8d467ccca5d6b7",
   "manifest": "PROJECT-MANIFEST.json",
   "spec": "SPEC.json",
   "node_test_cases": 15,
@@ -24,9 +24,9 @@
     },
     {
       "path": "README.md",
-      "bytes": 2305,
-      "sha256": "18a0107dbbb9c1769d6cc9e15d787debd5383032b7e3cf29f3f54e4e5538cb0f",
-      "origin": "standalone-public-run-instructions"
+      "bytes": 2247,
+      "sha256": "42dbb4f5342ae74f02a7034f3be2436de6b904b4c34c28867b7901a5745bf68c",
+      "origin": "independent-service-revision"
     },
     {
       "path": "THIRD_PARTY_NOTICES.md",
@@ -36,9 +36,9 @@
     },
     {
       "path": "_headers",
-      "bytes": 361,
-      "sha256": "ef31450f5ebd89a9dd027726b67e89dfa2ae61fe3fb5f4c433edc6e15cb349fa",
-      "origin": "standalone-extraction-or-shell"
+      "bytes": 387,
+      "sha256": "4abab4a8b45fc7b178665a28c48e1b03f3ca8c9f71bd009cab4f0f43f45b704b",
+      "origin": "independent-service-revision"
     },
     {
       "path": "index.html",
@@ -132,9 +132,9 @@
     },
     {
       "path": "src/tools/data-tools.js",
-      "bytes": 18838,
-      "sha256": "23d91ebafd37bf2d8ddb4bff212a8682c4c0fc4ae97d17c1c73584f66f7469e2",
-      "origin": "standalone-extraction-or-shell"
+      "bytes": 18896,
+      "sha256": "aad1d82c63bdb283e8d6064c2cadc415778890cddaaab841d252d568946e6ede",
+      "origin": "independent-service-revision"
     },
     {
       "path": "src/tools/data-worker.js",
@@ -150,9 +150,9 @@
     },
     {
       "path": "tests/data-ui.test.mjs",
-      "bytes": 5271,
-      "sha256": "f756b10ad191f063f04badc08aea751e3b53b8145b511d58a2d7b6544fcea196",
-      "origin": "standalone-extraction-or-shell"
+      "bytes": 5889,
+      "sha256": "361c6c23cb4ede77a9e5f1f4bc258def40396bb5983b8130907fbaa3cd6f932f",
+      "origin": "independent-service-revision"
     },
     {
       "path": "tests/mount-contract.test.mjs",

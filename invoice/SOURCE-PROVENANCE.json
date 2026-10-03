@@ -19,9 +19,9 @@
   },
   {
     "path": "_headers",
-    "bytes": 361,
-    "sha256": "ef31450f5ebd89a9dd027726b67e89dfa2ae61fe3fb5f4c433edc6e15cb349fa",
-    "origin": "standalone-extraction-or-shell"
+    "bytes": 387,
+    "sha256": "4abab4a8b45fc7b178665a28c48e1b03f3ca8c9f71bd009cab4f0f43f45b704b",
+    "origin": "independent-service-revision"
   },
   {
     "path": "index.html",

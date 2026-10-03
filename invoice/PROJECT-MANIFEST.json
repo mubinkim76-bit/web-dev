@@ -10,7 +10,7 @@
   "runtime_js_modules": 7,
   "static_vendor_scripts": [],
   "public_deployment": false,
-  "source_tree_sha256": "5cf08f65c4c0ed5120794a89c2a9f3200320f10c59dabe7ae213bb006e32fa29",
+  "source_tree_sha256": "178af30912050f83c553cb87cc48db46f27ca41b1edc3d95df64b1fdf529124d",
   "manifest": "PROJECT-MANIFEST.json",
   "spec": "SPEC.json",
   "node_test_cases": 4,
@@ -36,9 +36,9 @@
     },
     {
       "path": "_headers",
-      "bytes": 361,
-      "sha256": "ef31450f5ebd89a9dd027726b67e89dfa2ae61fe3fb5f4c433edc6e15cb349fa",
-      "origin": "standalone-extraction-or-shell"
+      "bytes": 387,
+      "sha256": "4abab4a8b45fc7b178665a28c48e1b03f3ca8c9f71bd009cab4f0f43f45b704b",
+      "origin": "independent-service-revision"
     },
     {
       "path": "index.html",

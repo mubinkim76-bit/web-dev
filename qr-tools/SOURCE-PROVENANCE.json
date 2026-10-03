@@ -19,9 +19,9 @@
   },
   {
     "path": "_headers",
-    "bytes": 361,
-    "sha256": "ef31450f5ebd89a9dd027726b67e89dfa2ae61fe3fb5f4c433edc6e15cb349fa",
-    "origin": "standalone-extraction-or-shell"
+    "bytes": 387,
+    "sha256": "4abab4a8b45fc7b178665a28c48e1b03f3ca8c9f71bd009cab4f0f43f45b704b",
+    "origin": "independent-service-revision"
   },
   {
     "path": "index.html",
@@ -115,9 +115,9 @@
   },
   {
     "path": "src/tools/auxiliary-ui.js",
-    "bytes": 3821,
-    "sha256": "6cd9fb8d3b7d756f08a1760da7e7f68a3d1fa58ea28f891a1b43dd91a8ebe55d",
-    "origin": "v0.2.3-byte-identical"
+    "bytes": 3945,
+    "sha256": "b898cdd4a5b8a208ca4605397637f027800aeaa1db50fed7c6861116440dc2d6",
+    "origin": "independent-service-revision"
   },
   {
     "path": "src/tools/auxiliary.css",
@@ -208,6 +208,12 @@
     "bytes": 10963,
     "sha256": "e291724b7912a99f4bccd704ec20543649e105ce9055efd1188bfcbd364079f9",
     "origin": "v0.2.3-byte-identical"
+  },
+  {
+    "path": "tests/consumer-boundaries.test.mjs",
+    "bytes": 2301,
+    "sha256": "4321c8703f1a37e0cccdf2ed55f35ba36d0603b7d70ba3979784d7c64df390d6",
+    "origin": "independent-service-addition"
   },
   {
     "path": "tests/engine.test.mjs",

@@ -2,16 +2,16 @@ from pathlib import Path
 import json,io,os,socket,subprocess,time
 from PIL import Image
 from playwright.sync_api import sync_playwright,expect
-root=Path(__file__).resolve().parents[1];out=root/'qa/browser-output'
+root=Path(__file__).resolve().parents[1];out=root/'qa/browser-output';out.mkdir(exist_ok=True)
 with socket.socket() as s:s.bind(('127.0.0.1',0));port=s.getsockname()[1]
-server=subprocess.Popen(['node','scripts/serve.mjs','--dist'],cwd=root,env={**os.environ,'PORT':str(port)},stdout=subprocess.DEVNULL)
+server=subprocess.Popen([os.environ.get('NODE_BINARY','node'),'scripts/serve.mjs','--dist'],cwd=root,env={**os.environ,'PORT':str(port)},stdout=subprocess.DEVNULL)
 try:
  for _ in range(100):
   try:
    with socket.create_connection(('127.0.0.1',port),.1):break
   except OSError:time.sleep(.05)
  with sync_playwright() as p:
-  browser=p.chromium.launch(executable_path='/usr/bin/chromium',headless=True,chromium_sandbox=True)
+  browser=p.chromium.launch(executable_path=os.environ.get('CHROMIUM_PATH','/usr/bin/chromium'),headless=True,chromium_sandbox=True)
   page=browser.new_page(accept_downloads=True)
   page.goto(f'http://127.0.0.1:{port}')
   image=Image.new('RGB',(80,40),'blue');b=io.BytesIO();image.save(b,'PNG')

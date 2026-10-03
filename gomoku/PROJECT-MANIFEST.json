@@ -10,12 +10,24 @@
   "runtime_js_modules": 10,
   "static_vendor_scripts": [],
   "public_deployment": false,
-  "source_tree_sha256": "5a731ad424603f564ce14cfaaae095ccad5ae04011d2dd2a549582a56e718f95",
+  "source_tree_sha256": "9006b69ebc5e195e253152b65533e9085097b42f45b6b925b46687bb921259d7",
   "manifest": "PROJECT-MANIFEST.json",
   "spec": "SPEC.json",
   "node_test_cases": 42,
   "browser_groups": 4,
   "source_files": [
+    {
+      "path": ".gitignore",
+      "bytes": 90,
+      "sha256": "0d45ed89cf638e63d577fc4b4fed78880e933ca0ca031e58e356052082b71425",
+      "origin": "independent-service-addition"
+    },
+    {
+      "path": "DEPLOYMENT.md",
+      "bytes": 1717,
+      "sha256": "5859384836eab6d045389a8dc93a17f93a11d88788666724d6aa766af55863d8",
+      "origin": "independent-service-addition"
+    },
     {
       "path": "LICENSE.md",
       "bytes": 214,
@@ -36,9 +48,9 @@
     },
     {
       "path": "_headers",
-      "bytes": 361,
-      "sha256": "ef31450f5ebd89a9dd027726b67e89dfa2ae61fe3fb5f4c433edc6e15cb349fa",
-      "origin": "standalone-extraction-or-shell"
+      "bytes": 387,
+      "sha256": "4abab4a8b45fc7b178665a28c48e1b03f3ca8c9f71bd009cab4f0f43f45b704b",
+      "origin": "independent-service-revision"
     },
     {
       "path": "index.html",
@@ -165,6 +177,12 @@
       "bytes": 33395,
       "sha256": "0fd18d5fec9e9f35ac6b64109de3072d0350826f830d1951ba2d039db2afd333",
       "origin": "v0.2.3-byte-identical"
+    },
+    {
+      "path": "tests/consumer-boundaries.test.mjs",
+      "bytes": 3642,
+      "sha256": "37ed6b637061177ba3635fc33ba1c7b241523337b9d03741672af7d35641bbfa",
+      "origin": "independent-service-addition"
     },
     {
       "path": "tests/gomoku-ui.test.mjs",

@@ -12,7 +12,7 @@
     "pdf"
   ],
   "public_deployment": false,
-  "source_tree_sha256": "ac95c1f948b9e69b145448df7697626a4059063e37442f8efe1752090f8ee63d",
+  "source_tree_sha256": "28d0dd6fc348146882815f23e3d6b9a6eb77cbfcdaf2273f837e84b8d007227a",
   "manifest": "PROJECT-MANIFEST.json",
   "spec": "SPEC.json",
   "node_test_cases": 21,
@@ -26,9 +26,9 @@
     },
     {
       "path": "README.md",
-      "bytes": 2303,
-      "sha256": "fd07c1b5877343b0215198395af0cdeb19122fc656594b0cdc0db27c3fce010e",
-      "origin": "standalone-public-run-instructions"
+      "bytes": 2245,
+      "sha256": "54e0434957f7bc9214963f96e747d01baf8526467bf33c44cd9372863392492d",
+      "origin": "independent-service-revision"
     },
     {
       "path": "THIRD_PARTY_NOTICES.md",
@@ -38,9 +38,9 @@
     },
     {
       "path": "_headers",
-      "bytes": 361,
-      "sha256": "ef31450f5ebd89a9dd027726b67e89dfa2ae61fe3fb5f4c433edc6e15cb349fa",
-      "origin": "standalone-extraction-or-shell"
+      "bytes": 387,
+      "sha256": "4abab4a8b45fc7b178665a28c48e1b03f3ca8c9f71bd009cab4f0f43f45b704b",
+      "origin": "independent-service-revision"
     },
     {
       "path": "index.html",

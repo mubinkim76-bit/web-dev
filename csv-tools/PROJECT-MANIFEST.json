@@ -10,7 +10,7 @@
   "runtime_js_modules": 7,
   "static_vendor_scripts": [],
   "public_deployment": false,
-  "source_tree_sha256": "31a94df13a3969fb1961124e8f97cc716c5ca9cdbcbae51107b374e76662a02a",
+  "source_tree_sha256": "34f7b8959046b475418645de0e482a771173aee3614cf7f29294b127c8b91ee8",
   "manifest": "PROJECT-MANIFEST.json",
   "spec": "SPEC.json",
   "node_test_cases": 20,
@@ -24,9 +24,9 @@
     },
     {
       "path": "README.md",
-      "bytes": 2305,
-      "sha256": "d0b5f3a836a647b2543d9ac8a07d7d55fdc788ffb98d1f6bbd9e7d3c3898915d",
-      "origin": "standalone-public-run-instructions"
+      "bytes": 2247,
+      "sha256": "dd911c06aaf99673df1d540125680a4463223a36eeeae734ae566430fc182df7",
+      "origin": "independent-service-revision"
     },
     {
       "path": "THIRD_PARTY_NOTICES.md",
@@ -36,9 +36,9 @@
     },
     {
       "path": "_headers",
-      "bytes": 361,
-      "sha256": "ef31450f5ebd89a9dd027726b67e89dfa2ae61fe3fb5f4c433edc6e15cb349fa",
-      "origin": "standalone-extraction-or-shell"
+      "bytes": 387,
+      "sha256": "4abab4a8b45fc7b178665a28c48e1b03f3ca8c9f71bd009cab4f0f43f45b704b",
+      "origin": "independent-service-revision"
     },
     {
       "path": "index.html",
@@ -102,9 +102,9 @@
     },
     {
       "path": "src/event-contract.js",
-      "bytes": 1445,
-      "sha256": "1d33a8c7f6b6dd3c614270669a266ec06b2df43c2fe445f233e2f6b737dfd3c9",
-      "origin": "standalone-extraction-or-shell"
+      "bytes": 1417,
+      "sha256": "06ae472248482ed680ab61c4f62dd2a591bf850af60f33586b2bc84bcff741cd",
+      "origin": "independent-service-revision"
     },
     {
       "path": "src/measurement.js",
