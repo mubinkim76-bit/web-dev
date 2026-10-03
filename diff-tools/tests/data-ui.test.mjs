@@ -59,3 +59,16 @@ test('Diff module compares escaped strings and clears pending results', async ()
   byText(root, 'button', 'Clear all').click(); assert.equal(before.value, ''); assert.equal(after.value, ''); assert.equal(dirty.at(-1), false); cleanup();
 });
 
+
+test('Clear all must not restore cleared text when the next input exceeds the limit', () => {
+  const { root } = setup(); const cleanup = mountDiff(root, { lang: 'en' });
+  const before = byAria(root, 'Before');
+  before.value = 'private prior input'; before.dispatch('input');
+  byText(root, 'button', 'Clear all').click();
+  assert.equal(before.value, '');
+  before.value = 'x\n'.repeat(2000);
+  const reconcile = before.events.get('input')[0];
+  reconcile({ isComposing: false, stopImmediatePropagation() {} });
+  assert.equal(before.value, '', 'input rejection must preserve the cleared state');
+  cleanup();
+});
