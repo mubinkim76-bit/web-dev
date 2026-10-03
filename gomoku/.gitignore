@@ -1,0 +1,8 @@
+dist/
+node_modules/
+qa/browser-output/
+qa/consumer-output/
+__pycache__/
+*.pyc
+.env
+.env.*

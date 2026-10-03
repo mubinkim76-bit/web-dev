@@ -3,12 +3,13 @@
   "version": "0.2.3-independent.1",
   "features": [
     "Local two-player/Worker AI Gomoku",
-    "undo/hints/export and optional current-game save",
+    "undo/hints and optional current-game save",
     "optimistic storage conflict check across tabs"
   ],
   "limits": [
     "Local device only; existing rule version retained",
-    "No online multiplayer/account/cloud sync; memory-only default"
+    "No online multiplayer/account/cloud sync; memory-only default",
+    "No game-record export or download UI; optional browser-local save only"
   ],
   "policy": {
     "free": true,
