@@ -41,3 +41,30 @@ test('CORE-01: cancellation during retry adds its unprocessed failures without d
  }finally{h.cleanup();}
 });
 
+
+test('Settings-only edits remain dirty after empty selection and clearing files',async()=>{
+ const h=setup(images);
+ try{
+  const width=all(h.root,n=>n.tagName==='input'&&n.attrs.type==='number')[0];
+  width.value='777';await width.dispatch('input');assert.equal(state.dirty.at(-1),true);
+  await width.dispatch('change');
+  await files(h.root,'Choose images',[]);assert.equal(state.dirty.at(-1),true);
+  await button(h.root,'Clear all').dispatch('click');assert.equal(state.dirty.at(-1),true);
+  assert.equal(width.value,'777');
+ }finally{h.cleanup();}
+});
+test('Preset addition, naming and successful settings import mark an empty workspace dirty',async()=>{
+ for(const edit of [
+  root=>button(root,'+ Add output preset').dispatch('click'),
+  async root=>{const p=all(root,n=>n.attrs.placeholder==='project')[0];p.value='sample';await p.dispatch('input');},
+  async root=>{await button(root,'Save settings JSON').dispatch('click');await files(root,'Load settings JSON',[new File([state.downloads[0].blob],'settings.json')]);}
+ ]){
+  const h=setup(images);try{await edit(h.root);assert.equal(state.dirty.at(-1),true);}finally{h.cleanup();}
+ }
+});
+test('Clearing an unmodified workspace stays clean; rejected settings do not mark dirty',async()=>{
+ const h=setup(images);try{
+  await button(h.root,'Clear all').dispatch('click');assert.equal(state.dirty.at(-1),false);
+  await files(h.root,'Load settings JSON',[new File(['{"version":99}'],'bad.json')]);assert.equal(state.dirty.at(-1),false);
+ }finally{h.cleanup();}
+});
