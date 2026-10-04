@@ -38,7 +38,7 @@ function setup() {
         let result;
         if (data.task === 'count') result = countText(data.text);
         else if (data.task === 'text') result = cleanText(data.text, data.rules);
-        else if (data.task === 'parse') result = data.inputs.map(input => ({ name: input.name, table: parseCSV(input.text, data.options) }));
+        else if (data.task === 'parse') result = data.inputs.map(input => ({ name: input.name, table: parseCSV(input.bytes ? new TextDecoder().decode(input.bytes) : input.text, data.options) }));
         else if (data.task === 'merge') result = mergeCSV(data.sources, data.options);
         else if (data.task === 'diff') result = data.mode === 'text' ? diffText(data.before, data.after, data.options) : diffCSV(parseCSV(data.before), parseCSV(data.after), data.options);
         this.onmessage({ data: { result } });
@@ -65,4 +65,33 @@ test('CSV sample mapping, duplicate approval, raw risk approval and parse invali
   const delimiter = labelled(root, 'Choose the delimiter explicitly'); delimiter.value = ';'; delimiter.dispatch('change');
   assert.equal(byText(root, 'button', 'Preview cleanup & merge').disabled, true); assert.ok(!search(root, node => node.tagName === 'button' && node.textContent === 'Download CSV')); assert.ok(root.textContent.includes('Input format changed.'));
   byText(root, 'button', 'Clear all').click(); assert.equal(dirty.at(-1), false); cleanup();
+});
+
+const deferred = () => { let resolve, reject; const promise = new Promise((a,b) => {resolve=a;reject=b;}); return {promise,resolve,reject}; };
+const fileFor = (pending,name='replacement.csv') => ({name,size:20,arrayBuffer:()=>pending.promise});
+const bytes = text => new TextEncoder().encode(text).buffer;
+test('replacement read blocks merge and rule invalidation until latest file is parsed', async () => {
+ const {root}=setup();const cleanup=mountCsv(root,{lang:'en'});
+ byText(root,'button','Load two sample files').click();await settle();
+ const pending=deferred();labelled(root,'Choose CSV/TSV files (replaces current input)').files=[fileFor(pending)];
+ byText(root,'button','Validate selected files').click();
+ const merge=byText(root,'button','Preview cleanup & merge');assert.equal(merge.disabled,true);
+ checkbox(root,'1. Trim cell whitespace').dispatch('change');assert.equal(merge.disabled,true);
+ merge.dispatch('click');pending.resolve(bytes('id,name\nnew,latest'));await settle();await settle();
+ assert.equal(merge.disabled,false);merge.click();await settle();assert.ok(root.textContent.includes('1 = 1 + 0'));assert.ok(root.textContent.includes('latest'));cleanup();
+});
+test('stale replacement failures cannot overwrite newer input or cancellation status', async () => {
+ const {root}=setup();const cleanup=mountCsv(root,{lang:'en'});
+ byText(root,'button','Load two sample files').click();await settle();
+ const old=deferred(),latest=deferred(),input=labelled(root,'Choose CSV/TSV files (replaces current input)');
+ input.files=[fileFor(old)];byText(root,'button','Validate selected files').click();
+ input.files=[fileFor(latest,'latest.csv')];byText(root,'button','Validate selected files').click();
+ latest.resolve(bytes('id\nlatest'));await settle();await settle();old.reject(new Error('STALE FAILURE'));await settle();assert.ok(!root.textContent.includes('STALE FAILURE'));
+ byText(root,'button','Preview cleanup & merge').click();await settle();assert.ok(root.textContent.includes('1 = 1 + 0'));
+ const cancelled=deferred();input.files=[fileFor(cancelled)];byText(root,'button','Validate selected files').click();byText(root,'button','Cancel').click();cancelled.reject(new Error('CANCELLED FAILURE'));await settle();assert.ok(root.textContent.includes('Cancelled.'));assert.ok(!root.textContent.includes('CANCELLED FAILURE'));cleanup();
+});
+test('current read failure remains visible and allows retry', async () => {
+ const {root}=setup();const cleanup=mountCsv(root,{lang:'en'});byText(root,'button','Load two sample files').click();await settle();
+ const pending=deferred();labelled(root,'Choose CSV/TSV files (replaces current input)').files=[fileFor(pending)];byText(root,'button','Validate selected files').click();pending.reject(new Error('READ FAILED'));await settle();
+ assert.ok(root.textContent.includes('READ FAILED'));assert.equal(byText(root,'button','Cancel').disabled,true);assert.equal(byText(root,'button','Validate selected files').disabled,false);cleanup();
 });

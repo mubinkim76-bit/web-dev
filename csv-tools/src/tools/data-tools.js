@@ -73,7 +73,7 @@ function tTitle(context, ko, en) { return context.t ? context.t(ko, en) : contex
 export function mountCsv(root, context = {}) {
   const { body, t } = shell(root, context, tTitle(context, 'CSV 정리와 병합', 'CSV cleanup & merge'), tTitle(context, '문자열을 유지하고 열 위치를 직접 연결해 세로로 합칩니다. 현재 보수적 한도: 3파일·합계 2 MiB·10,000행·100열. 붙여넣기 입력창은 최대 2,000줄.', 'Keep values as strings, map columns explicitly, and append rows. Conservative limits: 3 files, 2 MiB combined, 10,000 rows, 100 columns. Pasted input is limited to 2,000 physical lines.'));
   const metrics=toolMetrics('csv');const save=(text,name,type,action='csv_export')=>saveFile(metrics,action,text,name,type);
-  const work = job(); let alive = true, version = 0, sources = [], targetHeaders = [], mappings = [], result = null, totalBytes = 0;
+  const work = job(); let reading = false, alive = true, version = 0, sources = [], targetHeaders = [], mappings = [], result = null, totalBytes = 0;
   const status = statusNode(), mappingArea = h('div'), optionArea = h('div'), resultArea = h('div');
   const delimiter = delimiters(t), header = check(t('첫 행은 헤더', 'First row is a header'), true), fileInput = h('input', { type: 'file', accept: '.csv,.tsv,text/csv,text/tab-separated-values', multiple: true });
   const paste = h('textarea', { 'aria-label': t('CSV 붙여넣기', 'Paste CSV'), placeholder: 'id,name\n000123,홍길동', rows: 4 }); paste.style.minHeight = '100px';
@@ -82,7 +82,7 @@ export function mountCsv(root, context = {}) {
   const trim = check(t('1. 셀 앞뒤 공백 제거', '1. Trim cell whitespace')), removeEmpty = check(t('3. 모든 셀이 빈 행 제외', '3. Exclude all-empty rows'));
   const replace = check(t('2. 선택 열의 고정 문자열 치환', '2. Literal replacement in selected columns')), findInput = h('input', { type: 'text' }), withInput = h('input', { type: 'text' }), replaceColumns = h('div'), keyColumns = h('div'); let replaceChecks = [], keyChecks = [];
   const dedupPolicy = h('select', {}, h('option', { value: 'all' }, t('모두 유지', 'Keep all')), h('option', { value: 'first' }, t('첫 행 유지', 'Keep first')), h('option', { value: 'last' }, t('마지막 행 유지', 'Keep last'))), dedupCase = check(t('중복 키 대소문자 무시', 'Ignore case in duplicate keys'));
-  const invalidate = () => {metrics.cancelAll();version++; work.cancel(); result = null; resultArea.replaceChildren(); status.textContent = ''; execute.disabled = !sources.length; cancel.disabled = true; parseButton.disabled = false; };
+  const invalidate = () => {if (reading) { result = null; resultArea.replaceChildren(); execute.disabled = true; return; } metrics.cancelAll();version++; work.cancel(); result = null; resultArea.replaceChildren(); status.textContent = ''; execute.disabled = !sources.length; cancel.disabled = true; parseButton.disabled = false; };
   [trim.input, removeEmpty.input, replace.input, dedupPolicy, dedupCase.input].forEach(node => node.addEventListener('change', invalidate)); [findInput, withInput].forEach(node => node.addEventListener('input', invalidate));
   const mappingDefaults = (inputs = sources, offset = 0) => inputs.map((source, s) => targetHeaders.map((name, c) => {
     if (s + offset === 0) return { index: c };
@@ -111,6 +111,7 @@ export function mountCsv(root, context = {}) {
     })));
   }
   async function parseInputs(inputs, append = false) {
+    reading = false;
     const current=++version,measurement=metrics.begin('csv_parse');work.cancel();result=null; resultArea.replaceChildren(); status.className = 'du-status'; status.textContent = t('UTF-8·CSV 검사 중…', 'Checking UTF-8 and CSV…'); parseButton.disabled = true; execute.disabled = true; cancel.disabled = false;
     try {
       const bytes = inputs.reduce((sum, input) => sum + (input.bytes?.byteLength ?? utf8Bytes(input.text)), 0);
@@ -127,19 +128,32 @@ export function mountCsv(root, context = {}) {
       renderMappings(preserveMappings);
       inputList.textContent = `${sources.length} ${t('파일', 'files')} · ${totalBytes.toLocaleString()} B · ${sources.reduce((sum, source) => sum + source.table.rows.length, 0).toLocaleString()} ${t('데이터 행', 'data rows')}`;
       metrics.success(measurement);status.textContent=t('검사 완료. 열 매핑을 확인하고 정리·병합 미리보기를 만드세요.', 'Validated. Review the column mapping, then generate a cleanup and merge preview.');
-    }catch(error){if(error.name==='AbortError')metrics.cancel(measurement);else metrics.fail(measurement,'validation');errorStatus(status,error,t);}
+    }catch(error){if (!alive || current !== version) return; if(error.name==='AbortError')metrics.cancel(measurement);else metrics.fail(measurement,'validation');errorStatus(status,error,t);}
     finally { if (alive && current === version) { parseButton.disabled = false; execute.disabled = !sources.length; cancel.disabled = true; } }
   }
   const parseButton = button(t('선택 파일 검사', 'Validate selected files'), async () => {
-    const files=[...fileInput.files];if(!files.length) { status.textContent = t('CSV 또는 TSV 파일을 먼저 선택하세요.', 'Choose CSV or TSV files first.'); return; }
-    const measurement=metrics.begin('csv_import');
-    if (files.some(file=> !/\.(csv|tsv)$/i.test(file.name))) { status.textContent = t('CSV 또는 TSV 확장자 파일만 지원합니다. XLSX는 지원하지 않습니다.', 'Only .csv and .tsv files are supported. XLSX is not supported.');metrics.fail(measurement,'validation');return; }
-    if (files.length > DATA_LIMITS.files || files.reduce((sum, file) => sum + file.size, 0) > DATA_LIMITS.bytes) { status.textContent = t('최대 3파일·합계 2 MiB입니다.', 'Maximum 3 files and 2 MiB combined.');metrics.fail(measurement,'validation');return; }
-    const current = ++version; work.cancel(); status.textContent = t('선택 파일 읽는 중…', 'Reading selected files…'); cancel.disabled = false;
-    try { const inputs = await Promise.all(files.map(async file => ({ name: file.name, bytes: new Uint8Array(await file.arrayBuffer()) }))); if(alive&&current===version){metrics.success(measurement);await parseInputs(inputs);} } catch(error){metrics.fail(measurement);errorStatus(status,error,t);}
+    const files = [...fileInput.files], current = ++version;
+    metrics.cancelAll('superseded');
+    const measurement = metrics.begin('csv_import');
+    work.cancel(); reading = true; result = null; resultArea.replaceChildren();
+    execute.disabled = true; cancel.disabled = false; status.className = 'du-status';
+    status.textContent = t('선택 파일 읽는 중…', 'Reading selected files…');
+    try {
+      if (!files.length) throw new Error(t('CSV 또는 TSV 파일을 먼저 선택하세요.', 'Choose CSV or TSV files first.'));
+      if (files.some(file => !/\.(csv|tsv)$/i.test(file.name))) throw new Error(t('CSV 또는 TSV 확장자 파일만 지원합니다. XLSX는 지원하지 않습니다.', 'Only .csv and .tsv files are supported. XLSX is not supported.'));
+      if (files.length > DATA_LIMITS.files || files.reduce((sum, file) => sum + file.size, 0) > DATA_LIMITS.bytes) throw new Error(t('최대 3파일·합계 2 MiB입니다.', 'Maximum 3 files and 2 MiB combined.'));
+      const inputs = await Promise.all(files.map(async file => ({ name: file.name, bytes: new Uint8Array(await file.arrayBuffer()) })));
+      if (!alive || current !== version) return;
+      metrics.success(measurement); await parseInputs(inputs);
+    } catch (error) {
+      if (!alive || current !== version) return;
+      metrics.fail(measurement); errorStatus(status,error,t);
+    } finally {
+      if (alive && current === version) { reading = false; parseButton.disabled = false; execute.disabled = !sources.length; cancel.disabled = true; }
+    }
   });
   const sampleButton = button(t('예제 2파일 불러오기', 'Load two sample files'), () => { delimiter.value = ','; header.input.checked = true; parseInputs([{ name: 'sample-a.csv', text: 'id,name,note\r\n000123,한글,"쉼표, 보존"\r\n12345678901234567890,민수,"첫 줄\n둘째 줄"\r\n,빈 키,=1+1\r\n000123,중복,확인 필요' }, { name: 'sample-b.csv', text: 'name,id,note\n지수,000124,원문 유지\n마지막,000123,중복 후보' }]); }, true);
-  const cancel = button(t('취소', 'Cancel'), ()=>{metrics.cancelAll('user_cancel');version++;work.cancel();parseButton.disabled = false; execute.disabled = !sources.length; cancel.disabled = true; status.textContent = t('취소됨. 검사 완료한 입력은 유지됩니다.', 'Cancelled. Previously validated inputs are preserved.'); }, true); cancel.disabled = true;
+  const cancel = button(t('취소', 'Cancel'), ()=>{reading = false;metrics.cancelAll('user_cancel');version++;work.cancel();parseButton.disabled = false; execute.disabled = !sources.length; cancel.disabled = true; status.textContent = t('취소됨. 검사 완료한 입력은 유지됩니다.', 'Cancelled. Previously validated inputs are preserved.'); }, true); cancel.disabled = true;
   function showResult() {
     if (!result) return;
     const duplicated = result.excluded.filter(item => item.reason.startsWith('duplicate')).length;
@@ -161,16 +175,17 @@ export function mountCsv(root, context = {}) {
     updateExport();
   }
   const execute = button(t('정리·병합 미리보기', 'Preview cleanup & merge'), async () => {
+    if (reading || execute.disabled || !sources.length) return;
     const current=++version,measurement=metrics.begin('csv_merge');execute.disabled = true; cancel.disabled = false; status.className = 'du-status'; status.textContent = t('전체 행 처리 중…', 'Processing every row…');
     try { const value = await work.run({ task: 'merge', sources, options: { headers: targetHeaders, mappings, rules: { trim: trim.input.checked, removeEmpty: removeEmpty.input.checked, replace: { enabled: replace.input.checked, columns: replaceChecks.flatMap((item, i) => item.input.checked ? [i] : []), find: findInput.value, with: withInput.value } }, dedup: { policy: dedupPolicy.value, keys: keyChecks.flatMap((item, i) => item.input.checked ? [i] : []), ignoreCase: dedupCase.input.checked } } });
       if (!alive || current !== version) return; result=value;showResult();metrics.success(measurement);metrics.artifact(measurement);status.textContent = t('전체 검사 완료. 변경·제외 제안과 출력 경고를 확인하세요.', 'Full check complete. Review changes, proposed exclusions, and export warnings.');
-    }catch(error){if(error.name==='AbortError')metrics.cancel(measurement);else metrics.fail(measurement);errorStatus(status,error,t);}
+    }catch(error){if (!alive || current !== version) return; if(error.name==='AbortError')metrics.cancel(measurement);else metrics.fail(measurement);errorStatus(status,error,t);}
     finally { if (alive && current === version) { execute.disabled = false; cancel.disabled = true; } }
   }); execute.disabled = true;
-  const discardParsed = ()=>{metrics.cancelAll('user_cancel');invalidate();sources=[]; targetHeaders = []; mappings = []; totalBytes = 0; mappingArea.replaceChildren(); optionArea.hidden = true; inputList.textContent = ''; execute.disabled = true; status.textContent = t('입력 형식이 바뀌었습니다. 선택 파일을 다시 검사하거나 붙여넣은 CSV를 다시 추가하세요.', 'Input format changed. Validate selected files again or add the pasted CSV again.'); };
+  const discardParsed = ()=>{reading = false;metrics.cancelAll('user_cancel');invalidate();sources=[]; targetHeaders = []; mappings = []; totalBytes = 0; mappingArea.replaceChildren(); optionArea.hidden = true; inputList.textContent = ''; execute.disabled = true; status.textContent = t('입력 형식이 바뀌었습니다. 선택 파일을 다시 검사하거나 붙여넣은 CSV를 다시 추가하세요.', 'Input format changed. Validate selected files again or add the pasted CSV again.'); };
   delimiter.addEventListener('change', discardParsed); header.input.addEventListener('change', discardParsed);
   optionArea.hidden = true;
   optionArea.append(h('div', { class: 'panel' }, h('h3', { class: 'du-subhead' }, t('정리 규칙과 중복 정책', 'Cleanup rules & duplicate policy')), h('p', { class: 'du-note' }, t('순서: 매핑 → 1 공백 → 2 고정 문자열 치환 → 3 빈 행 → 4 중복. 숫자·날짜·Unicode 정규화는 자동 적용하지 않습니다.', 'Order: mapping → 1 whitespace → 2 literal replacement → 3 empty rows → 4 duplicates. No automatic numeric, date, or Unicode normalization.')), trim.node, replace.node, h('div', { class: 'grid-2' }, field(t('찾을 문자열 (정규식 아님)', 'Find (literal, not regex)'), findInput), field(t('바꿀 문자열', 'Replace with'), withInput)), h('details', {}, h('summary', {}, t('치환 대상 열 선택', 'Choose replacement columns')), replaceColumns), removeEmpty.node, field(t('4. 중복 처리', '4. Duplicate policy'), dedupPolicy), h('details', { open: true }, h('summary', {}, t('중복 판정 키 열 (선택해야 판정)', 'Duplicate key columns (explicit selection required)')), keyColumns), dedupCase.node, h('p', { class: 'du-note' }, t('키 셀 중 하나라도 빈 값·공백뿐이면 중복 삭제하지 않습니다. 중복 행 제외는 미리보기 후 확인해야 저장할 수 있습니다.', 'If any key cell is empty or whitespace-only, the row is not removed as a duplicate. Confirm proposed duplicate exclusions before downloading.')), execute));
-  body.append(h('div', { class: 'panel' }, h('h3', { class: 'du-subhead' }, t('1. 입력 확인', '1. Validate input')), h('div', { class: 'grid-2' }, field(t('CSV·TSV 파일 선택 (기존 입력 교체)', 'Choose CSV/TSV files (replaces current input)'), fileInput), field(t('명시적 구분자 선택', 'Choose the delimiter explicitly'), delimiter)), header.node, h('p', { class: 'du-note' }, t('UTF-8/BOM만 지원합니다. 인코딩 추측, XLSX, 행별 열 수 불일치, 닫히지 않은 따옴표는 허용하지 않습니다. CSV 셀 안 줄바꿈은 보존합니다.', 'UTF-8/BOM only. No encoding guesses or XLSX. Uneven record widths and unclosed quotes are errors. Newlines inside quoted cells are preserved.')), h('div', { class: 'toolbar' }, parseButton, sampleButton), h('details', {}, h('summary', {}, t('CSV 붙여넣기로 추가', 'Append pasted CSV')), paste, button(t('붙여넣은 CSV 추가', 'Append pasted CSV'), () => parseInputs([{ name: `pasted-${sources.length + 1}.csv`, text: paste.value }], true), true)), inputList), mappingArea, optionArea, h('div', { class: 'toolbar' }, cancel, button(t('전체 지우기', 'Clear all'), () => { invalidate(); sources = []; targetHeaders = []; mappings = []; totalBytes = 0; fileInput.value = paste.value = ''; mappingArea.replaceChildren(); optionArea.hidden = true; inputList.textContent = ''; execute.disabled = true; setDirty(false); }, true)), status, resultArea);
+  body.append(h('div', { class: 'panel' }, h('h3', { class: 'du-subhead' }, t('1. 입력 확인', '1. Validate input')), h('div', { class: 'grid-2' }, field(t('CSV·TSV 파일 선택 (기존 입력 교체)', 'Choose CSV/TSV files (replaces current input)'), fileInput), field(t('명시적 구분자 선택', 'Choose the delimiter explicitly'), delimiter)), header.node, h('p', { class: 'du-note' }, t('UTF-8/BOM만 지원합니다. 인코딩 추측, XLSX, 행별 열 수 불일치, 닫히지 않은 따옴표는 허용하지 않습니다. CSV 셀 안 줄바꿈은 보존합니다.', 'UTF-8/BOM only. No encoding guesses or XLSX. Uneven record widths and unclosed quotes are errors. Newlines inside quoted cells are preserved.')), h('div', { class: 'toolbar' }, parseButton, sampleButton), h('details', {}, h('summary', {}, t('CSV 붙여넣기로 추가', 'Append pasted CSV')), paste, button(t('붙여넣은 CSV 추가', 'Append pasted CSV'), () => parseInputs([{ name: `pasted-${sources.length + 1}.csv`, text: paste.value }], true), true)), inputList), mappingArea, optionArea, h('div', { class: 'toolbar' }, cancel, button(t('전체 지우기', 'Clear all'), () => { reading = false; invalidate(); sources = []; targetHeaders = []; mappings = []; totalBytes = 0; fileInput.value = paste.value = ''; mappingArea.replaceChildren(); optionArea.hidden = true; inputList.textContent = ''; execute.disabled = true; setDirty(false); }, true)), status, resultArea);
   return () => { metrics.dispose();alive = false; version++; work.cancel(); sources = []; targetHeaders = []; mappings = []; result = null; paste.value = ''; fileInput.value = ''; setDirty(false); };
 }
