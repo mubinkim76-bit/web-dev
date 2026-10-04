@@ -13,7 +13,7 @@ try:
  with sync_playwright() as p:
   browser=p.chromium.launch(executable_path=os.environ.get('CHROMIUM_PATH','/usr/bin/chromium'),headless=True,chromium_sandbox=True)
   page=browser.new_page(accept_downloads=True)
-  page.goto(f'http://127.0.0.1:{port}')
+  page.goto(os.environ.get('QA_BASE_URL',f'http://127.0.0.1:{port}').rstrip('/')+'/')
   image=Image.new('RGB',(80,40),'blue');b=io.BytesIO();image.save(b,'PNG')
   page.get_by_label('사진 선택',exact=True).set_input_files({'name':'consumer.png','mimeType':'image/png','buffer':b.getvalue()})
   page.once('dialog',lambda d:d.dismiss());page.get_by_label('언어 변경',exact=True).click()

@@ -53,3 +53,7 @@ PROJECTS.json and each PROJECT-MANIFEST.json describe independent source entries
 ## Verify publication hashes
 
 Run `python3 scripts/publication-manifest.py --check` to verify the current public inventory. After an authorized source edit, run `python3 scripts/publication-manifest.py` to regenerate it. Source digests exclude QA and generated metadata; `PUBLICATION-MANIFEST.json` includes public source, tests, documentation and manifests, but excludes itself and Git-ignored build/QA outputs. Stage intended files before verification so Git ignore rules and the inventory remain explicit.
+
+## One site with eleven service paths
+
+Run `node scripts/build-pages.mjs` from the repository root to create a combined `dist/` with a service directory and eleven `/<slug>/` entries. Existing per-service builds remain available. See [PAGES.md](PAGES.md) for build settings, path normalization, headers, shared-origin storage and the full subpath QA gate. This prepares static files; it does not deploy them.

@@ -16,7 +16,7 @@ def local_server():
     with socket.create_connection(('127.0.0.1',port),timeout=.1): break
    except OSError: time.sleep(.05)
   else: raise RuntimeError('Local server readiness timed out')
-  yield f'http://127.0.0.1:{port}'
+  yield os.environ.get('QA_BASE_URL',f'http://127.0.0.1:{port}').rstrip('/')
  finally:
   server.terminate(); server.wait(timeout=5)
 with local_server() as base, sync_playwright() as p:
@@ -59,8 +59,8 @@ with local_server() as base, sync_playwright() as p:
  def headers():
   for path,code in [('/',200),('/?lang=en',200),('/index.html',200),('/src/app.js',200),('/public/fonts/NotoSansKR-Local.woff',200),('/invoice',404),('/package.json',404),('/../package.json',404)]:
    r=c.request.get(base+path);assert r.status==code,(path,r.status)
-  r=c.request.get(base+'/');assert r.headers['cache-control']=='no-store';assert r.headers['x-content-type-options']=='nosniff'
-  return 'root/query/index entry and assets work; unsupported routes/private files 404; local no-store/nosniff'
+  r=c.request.get(base+'/');assert r.headers['cache-control']==('no-cache' if os.environ.get('QA_BASE_URL') else 'no-store');assert r.headers['x-content-type-options']=='nosniff'
+  return 'root/query/index entry and assets work; unsupported routes/private files 404; expected cache policy/nosniff'
  run('entry routes and local headers',headers)
  def traffic():
   assert not errors,errors;assert all(x.startswith(base+'/') or x.startswith(('data:','blob:')) for x in requests)

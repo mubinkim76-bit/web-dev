@@ -18,7 +18,7 @@ sock=socket.socket();sock.bind(('127.0.0.1',0));port=sock.getsockname()[1];sock.
 isolated=Path(tempfile.mkdtemp(prefix=PROJECT.name+'-browser-isolated-'))/'project';shutil.copytree(PROJECT,isolated)
 env={**os.environ,'PORT':str(port)};node=os.environ.get('NODE_BINARY','node')
 server=subprocess.Popen([node,'scripts/serve.mjs','--dist'],cwd=isolated,env=env,stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL)
-base=f'http://127.0.0.1:{port}'
+base=os.environ.get('QA_BASE_URL',f'http://127.0.0.1:{port}').rstrip('/')
 try:
  for _ in range(100):
   try:
@@ -105,8 +105,8 @@ try:
   record('Korean/English at 1440, 390 and 320 pixels',responsive)
   def isolation():
    assert not errors,errors;assert all(url.startswith(base) or url.startswith(('blob:','data:')) for _,url in requests),requests;assert not [r for r in responses if r[0]>=400],responses;assert not [r for r in requests if r[0] not in ['GET','HEAD']];assert page.locator('nav').count()==0
-   return {'page_errors':errors,'requests':len(requests),'external_requests':0,'server_posts':0,'siblings_present':False}
-  record('standalone browser dependencies and zero external traffic',isolation)
+   return {'page_errors':errors,'requests':len(requests),'external_requests':0,'server_posts':0,'siblings_present':bool(os.environ.get('QA_BASE_URL'))}
+  record('service asset isolation and zero external traffic',isolation)
   browser.close()
 finally:
  server.terminate();server.wait(timeout=5)

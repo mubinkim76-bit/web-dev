@@ -10,7 +10,7 @@ def record(name,fn):
  (OUT/'results.json').write_text(json.dumps(checks,ensure_ascii=False,indent=2))
 s=socket.socket();s.bind(('127.0.0.1',0));port=s.getsockname()[1];s.close()
 server=subprocess.Popen(['node','scripts/serve.mjs','--dist'],cwd=ROOT,env={**os.environ,'PORT':str(port)},stdout=subprocess.DEVNULL)
-base=f'http://127.0.0.1:{port}'
+base=os.environ.get('QA_BASE_URL',f'http://127.0.0.1:{port}').rstrip('/')
 try:
  for _ in range(100):
   try:
