@@ -151,9 +151,9 @@
   },
   {
     "path": "src/tools/receipts.js",
-    "bytes": 8219,
-    "sha256": "7cddb99c91e8a20426f0a1c28e4de7266eafa3b485685d9e9a59edc3a6799330",
-    "origin": "v0.2.3-byte-identical"
+    "bytes": 8697,
+    "sha256": "9cc333e5d50f3f387dda4f70d6371aa7a52a94ca9c35f03a605f316a8d9fdf1e",
+    "origin": "independent-service-revision"
   },
   {
     "path": "tests/image.test.mjs",
@@ -163,9 +163,9 @@
   },
   {
     "path": "tests/mount-contract.test.mjs",
-    "bytes": 3129,
-    "sha256": "a7fb8f86fc764692c66a60a19e74010aa8dca0439a318f831314f0bf513ce69f",
-    "origin": "standalone-extraction-or-shell"
+    "bytes": 5290,
+    "sha256": "b4eacd1fe1e13062ccc9bd4ca4ab076823c83423b7062afdc5081bd2069ce168",
+    "origin": "independent-service-revision"
   },
   {
     "path": "tests/receipt.test.mjs",

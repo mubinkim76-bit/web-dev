@@ -12,7 +12,7 @@
     "pdf"
   ],
   "public_deployment": false,
-  "source_tree_sha256": "28d0dd6fc348146882815f23e3d6b9a6eb77cbfcdaf2273f837e84b8d007227a",
+  "source_tree_sha256": "07e56510db8cb283bca87955bc56662fbbd2b3c532b4b4117e7f470a8ecefed9",
   "manifest": "PROJECT-MANIFEST.json",
   "spec": "SPEC.json",
   "node_test_cases": 21,
@@ -170,9 +170,9 @@
     },
     {
       "path": "src/tools/report.js",
-      "bytes": 11601,
-      "sha256": "8efeba2c370d64a8f161f2b009d98522bd915b37d8b51a19f91376a0117cbe56",
-      "origin": "v0.2.3-byte-identical"
+      "bytes": 11918,
+      "sha256": "5295f8a8562e004f1631abe6d68bd67e738da8ba560d8cac553218d70559c18f",
+      "origin": "independent-service-revision"
     },
     {
       "path": "tests/data-core.test.mjs",
@@ -188,9 +188,9 @@
     },
     {
       "path": "tests/mount-contract.test.mjs",
-      "bytes": 3127,
-      "sha256": "0b76446cccfb70a8320c072f961f54569d4742c1ce798a2f9a3bcd64054d4723",
-      "origin": "standalone-extraction-or-shell"
+      "bytes": 5925,
+      "sha256": "f4914f17c94b4141e4654e128cb71bfa891b2b93648b679bf76467a665038008",
+      "origin": "independent-service-revision"
     },
     {
       "path": "tests/report.test.mjs",

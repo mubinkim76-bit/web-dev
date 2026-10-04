@@ -1,6 +1,7 @@
 """Deterministic file-read race regression, standalone or /csv-tools/ static path."""
 from pathlib import Path
-import argparse, functools, http.server, json, shutil, tempfile, threading
+import argparse, functools, http.server, json, shutil, tempfile, threading, os
+from urllib.parse import urlsplit
 from playwright.sync_api import sync_playwright, expect
 
 args = argparse.ArgumentParser()
@@ -19,11 +20,11 @@ with tempfile.TemporaryDirectory(prefix='csv-state-qa-') as tmp:
     threading.Thread(target=server.serve_forever, daemon=True).start()
     try:
         with sync_playwright() as p:
-            browser = p.chromium.launch(executable_path='/usr/bin/chromium', headless=True, chromium_sandbox=True)
+            browser = p.chromium.launch(executable_path=os.environ.get('CHROMIUM_PATH','/usr/bin/chromium'), headless=True, chromium_sandbox=True)
             page = browser.new_page(accept_downloads=True)
             errors=[]; page.on('pageerror',lambda e:errors.append(str(e)))
             page.on('dialog',lambda d:d.accept())
-            page.goto(f'http://127.0.0.1:{server.server_port}/{prefix}?lang=en')
+            page.goto((os.environ['QA_BASE_URL'].rstrip('/')+'/' if os.environ.get('QA_BASE_URL') else f'http://127.0.0.1:{server.server_port}/{prefix}')+'?lang=en')
             def button(name): return page.get_by_role('button',name=name,exact=True)
             merge=button('Preview cleanup & merge'); status=page.locator('.du-status').first
             button('Load two sample files').click(); expect(merge).to_be_enabled()
@@ -46,7 +47,7 @@ with tempfile.TemporaryDirectory(prefix='csv-state-qa-') as tmp:
                 page.evaluate('pendingReads[0].resolve()'); expect(merge).to_be_enabled();merge.click()
                 expect(page.locator('.workspace')).to_contain_text('1 = 1 + 0')
                 with page.expect_download() as download: button('Download CSV').click()
-                download.value.save_as(out/('state-subpath.csv' if options.subpath else 'state-root.csv'))
+                download.value.save_as(out/('state-subpath.csv' if options.subpath or os.environ.get('QA_BASE_URL') else 'state-root.csv'))
                 assert '"new","latest"' in Path(download.value.path()).read_text(encoding='utf-8-sig')
                 read('old.csv'); read('newest.csv')
                 page.evaluate('pendingReads[2].resolve()');expect(merge).to_be_enabled()
@@ -56,9 +57,9 @@ with tempfile.TemporaryDirectory(prefix='csv-state-qa-') as tmp:
                 read();read('invalid.xlsx');expect(status).to_contain_text('XLSX is not supported');page.evaluate('pendingReads[5].resolve()');page.wait_for_timeout(100);expect(status).to_contain_text('XLSX is not supported')
                 read();page.evaluate('pendingReads[6].resolve()');expect(merge).to_be_enabled();merge.click();expect(page.locator('.workspace')).to_contain_text('1 = 1 + 0')
                 assert not errors, errors
-                result={'status':'PASS','path':'/'+prefix,'latest_rows':1,'stale_error':'ignored','cancel':'preserved','current_error':'preserved','invalid_latest_selection':'preserved','retry':'PASS','download':'PASS','page_errors':errors}
-            page.screenshot(path=out/('state-subpath.png' if options.subpath else 'state-root.png'),full_page=True)
-            (out/('state-subpath.json' if options.subpath else 'state-root.json')).write_text(json.dumps(result,indent=2))
+                result={'status':'PASS','path':urlsplit(os.environ['QA_BASE_URL']).path+'/' if os.environ.get('QA_BASE_URL') else '/'+prefix,'latest_rows':1,'stale_error':'ignored','cancel':'preserved','current_error':'preserved','invalid_latest_selection':'preserved','retry':'PASS','download':'PASS','page_errors':errors}
+            page.screenshot(path=out/('state-subpath.png' if options.subpath or os.environ.get('QA_BASE_URL') else 'state-root.png'),full_page=True)
+            (out/('state-subpath.json' if options.subpath or os.environ.get('QA_BASE_URL') else 'state-root.json')).write_text(json.dumps(result,indent=2))
             print(json.dumps(result));browser.close()
     finally:
         server.shutdown();server.server_close()

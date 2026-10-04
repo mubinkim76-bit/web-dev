@@ -5,3 +5,5 @@ App runtime and Node tests require Node 20+ only. Browser QA additionally requir
 From this project folder, run `npm run build`, then `python3 qa/browser.py`. Set `NODE_BINARY` and `CHROMIUM_PATH` if their default locations differ. The script uses only synthetic fixtures, starts a loopback server, and creates results in `qa/browser-output/`. It does not publish the website. Do not disable browser sandboxing or bypass access restrictions.
 
 Large screenshots and generated download artifacts are excluded from Git. Existing historical QA summaries are recorded in SPEC.json and validation.json. These are not a fresh run on a production URL. Physical mobile and physical print checks remain outstanding.
+
+`python3 qa/state-browser.py` checks delayed replacement reads, blocked merge, stale failures, cancellation and recovery using the standalone build. The combined root runner sets `QA_BASE_URL` for `/csv-tools/`. Delays affect synthetic File read promises only; the actual app and Worker process the inputs. Results remain in ignored `qa/browser-output/`.

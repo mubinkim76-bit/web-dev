@@ -1,7 +1,7 @@
-"""Settings-only language guard in sandboxed Chromium, root and subpath.
-Build the service and repository Pages output first, then run from this folder:
-PAGES_IMAGE_DIR=../dist/image-batch python3 qa/settings-dirty.py
---expect-bug records the pre-fix behavior when run against baseline builds.
+"""Settings-only and file-removal dirty state in sandboxed Chromium.
+Run after the service build. QA_BASE_URL targets the combined subpath server;
+PAGES_IMAGE_DIR optionally tests both standalone and separately copied Pages output.
+--expect-bug / --expect-removal-bug are baseline reproduction modes only.
 """
 from pathlib import Path
 import functools,http.server,threading,tempfile,shutil,json,sys,os,io
@@ -11,7 +11,9 @@ project=Path(__file__).resolve().parents[1]
 out=project/'qa/browser-output';out.mkdir(exist_ok=True)
 results=[]
 with tempfile.TemporaryDirectory() as temp:
- root=Path(temp);shutil.copytree(Path(os.environ['PAGES_IMAGE_DIR']),root/'image-batch')
+ root=Path(temp)
+ if os.environ.get('PAGES_IMAGE_DIR'):shutil.copytree(Path(os.environ['PAGES_IMAGE_DIR']),root/'image-batch')
+ routes=['/image-batch/'] if os.environ.get('QA_BASE_URL') else (['/', '/image-batch/'] if os.environ.get('PAGES_IMAGE_DIR') else ['/'])
  for f in (project/'dist').iterdir():
   if f.is_dir():shutil.copytree(f,root/f.name)
   else:shutil.copy2(f,root/f.name)
@@ -19,9 +21,9 @@ with tempfile.TemporaryDirectory() as temp:
  threading.Thread(target=server.serve_forever,daemon=True).start()
  try:
   with sync_playwright() as p:
-   browser=p.chromium.launch(executable_path='/usr/bin/chromium',headless=True,chromium_sandbox=True)
-   for route in ['/', '/image-batch/']:
-    page=browser.new_page();requests=[];page.on('request',lambda r:requests.append(r.url));page.goto(f'http://127.0.0.1:{server.server_port}{route}')
+   browser=p.chromium.launch(executable_path=os.environ.get('CHROMIUM_PATH','/usr/bin/chromium'),headless=True,chromium_sandbox=True)
+   for route in routes:
+    page=browser.new_page();requests=[];page.on('request',lambda r:requests.append(r.url));page.goto(os.environ['QA_BASE_URL'].rstrip('/')+'/' if os.environ.get('QA_BASE_URL') else f'http://127.0.0.1:{server.server_port}{route}')
     width=page.get_by_label('너비 px',exact=True);width.fill('777');width.blur()
     dialogs=[]
     def dismiss(d):dialogs.append(d.message);d.dismiss()
@@ -43,9 +45,9 @@ with tempfile.TemporaryDirectory() as temp:
     page.close()
    if '--expect-bug' not in sys.argv:
     image=Image.new('RGB',(80,40),'blue');data=io.BytesIO();image.save(data,'PNG')
-    for route in ['/', '/image-batch/']:
+    for route in routes:
      for edited,count,converted in [(False,1,False),(True,1,False),(False,2,False),(False,1,True),(True,1,True)]:
-      page=browser.new_page();page.goto(f'http://127.0.0.1:{server.server_port}{route}')
+      page=browser.new_page();page.goto(os.environ['QA_BASE_URL'].rstrip('/')+'/' if os.environ.get('QA_BASE_URL') else f'http://127.0.0.1:{server.server_port}{route}')
       if edited:
        page.get_by_label('너비 px',exact=True).fill('777');page.get_by_label('너비 px',exact=True).blur()
       page.get_by_label('사진 선택',exact=True).set_input_files([{'name':f'synthetic-{i}.png','mimeType':'image/png','buffer':data.getvalue()} for i in range(count)])
@@ -67,5 +69,5 @@ with tempfile.TemporaryDirectory() as temp:
       page.close()
    browser.close()
  finally:server.shutdown();server.server_close()
-name='settings-removal-before.json' if '--expect-removal-bug' in sys.argv else 'settings-dirty-before.json' if '--expect-bug' in sys.argv else 'settings-dirty-after.json'
+name='settings-removal-before.json' if '--expect-removal-bug' in sys.argv else 'settings-dirty-before.json' if '--expect-bug' in sys.argv else ('settings-dirty-subpath.json' if os.environ.get('QA_BASE_URL') else 'settings-dirty-after.json')
 (out/name).write_text(json.dumps(results,indent=2));print(json.dumps(results))

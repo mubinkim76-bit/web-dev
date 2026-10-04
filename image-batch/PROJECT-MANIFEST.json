@@ -12,7 +12,7 @@
     "jszip"
   ],
   "public_deployment": false,
-  "source_tree_sha256": "49dc115be08b196ece4ad22d2ba47d04bf181a5c3e982fdd774b3c3ec2fc5fb4",
+  "source_tree_sha256": "947c0d82e9ee5ca132f4868d05b458cf5cdc0564655fe504d16b3b230d2aba15",
   "manifest": "PROJECT-MANIFEST.json",
   "spec": "SPEC.json",
   "node_test_cases": 12,
@@ -152,15 +152,15 @@
     },
     {
       "path": "src/tools/images.js",
-      "bytes": 15076,
-      "sha256": "afb22df53f2a96de9ed8b44485f59f9c5e86492af3a4c4b3738698911fd373b7",
-      "origin": "v0.2.3-byte-identical"
+      "bytes": 15526,
+      "sha256": "eb02d7e4207fba9a67b94f58e972f7d91120732ec4404218fc855d60a15050ae",
+      "origin": "independent-service-revision"
     },
     {
       "path": "tests/core-regressions.test.mjs",
-      "bytes": 2965,
-      "sha256": "c0bf683dd5a2099f8beaf2d443cb455cace9a554da2ba50bb27b0e951f764649",
-      "origin": "standalone-extraction-or-shell"
+      "bytes": 5520,
+      "sha256": "a66c20748ce9884ee28d18806834721bb67d44cbf782633f482a762b847cf414",
+      "origin": "independent-service-revision"
     },
     {
       "path": "tests/helpers/core-ui.mjs",

@@ -115,9 +115,9 @@
   },
   {
     "path": "src/tools/data-tools.js",
-    "bytes": 33233,
-    "sha256": "c6911082f6e049a6eaae3d28bca7dce2e16f5af1d6f4d925c4268854cdeb66e4",
-    "origin": "standalone-extraction-or-shell"
+    "bytes": 33882,
+    "sha256": "a0adab6582264f0d83a4605d2395b62493f5c6a91356a37f57596c7b123b36d0",
+    "origin": "independent-service-revision"
   },
   {
     "path": "src/tools/data-worker.js",
@@ -133,9 +133,9 @@
   },
   {
     "path": "tests/data-ui.test.mjs",
-    "bytes": 6144,
-    "sha256": "78eac244150232265f0ef813887035a58f36628f14d9a6f9458b9fa68229fd7d",
-    "origin": "standalone-extraction-or-shell"
+    "bytes": 9203,
+    "sha256": "6d61ead7f98080e49318f0c72dc75a77fc580649d89f05cac7124d9cc36a8d55",
+    "origin": "independent-service-revision"
   },
   {
     "path": "tests/mount-contract.test.mjs",
