@@ -68,3 +68,22 @@ test('Clearing an unmodified workspace stays clean; rejected settings do not mar
   await files(h.root,'Load settings JSON',[new File(['{"version":99}'],'bad.json')]);assert.equal(state.dirty.at(-1),false);
  }finally{h.cleanup();}
 });
+
+test('Removing files recomputes dirty from remaining settings, files and outputs',async()=>{
+ for(const {edited,count,converted} of [
+  {edited:false,count:1,converted:false},
+  {edited:true,count:1,converted:false},
+  {edited:false,count:2,converted:false},
+  {edited:false,count:1,converted:true},
+  {edited:true,count:1,converted:true}
+ ]){
+  const h=setup(images);try{
+   if(edited){const width=all(h.root,n=>n.tagName==='input'&&n.attrs.type==='number')[0];width.value='777';await width.dispatch('change');}
+   await files(h.root,'Choose images',Array.from({length:count},(_,i)=>good(`file-${i}.png`)));
+   if(converted){await button(h.root,'Convert batch').dispatch('click');assert.equal(all(h.root,n=>n.tagName==='table').length,1);}
+   await button(h.root,'Remove').dispatch('click');
+   assert.equal(state.dirty.at(-1),edited||count>1,JSON.stringify({edited,count,converted}));
+   assert.equal(all(h.root,n=>n.tagName==='table').length,0,'Outputs are invalidated when a file is removed');
+  }finally{h.cleanup();}
+ }
+});
