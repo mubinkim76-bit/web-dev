@@ -4,7 +4,8 @@ PAGES_IMAGE_DIR=../dist/image-batch python3 qa/settings-dirty.py
 --expect-bug records the pre-fix behavior when run against baseline builds.
 """
 from pathlib import Path
-import functools,http.server,threading,tempfile,shutil,json,sys,os
+import functools,http.server,threading,tempfile,shutil,json,sys,os,io
+from PIL import Image
 from playwright.sync_api import sync_playwright,expect
 project=Path(__file__).resolve().parents[1]
 out=project/'qa/browser-output';out.mkdir(exist_ok=True)
@@ -40,7 +41,31 @@ with tempfile.TemporaryDirectory() as temp:
      results.append({'route':route,'status':'PASS','checks':['settings-only guard','cancel retains 777','clear retains settings guard','confirm resets to 1200','fresh state switches without warning']})
     if route!='/':assert not any('/src/' in u.replace('/image-batch/src/','') or '/public/' in u.replace('/image-batch/public/','') for u in requests),requests
     page.close()
+   if '--expect-bug' not in sys.argv:
+    image=Image.new('RGB',(80,40),'blue');data=io.BytesIO();image.save(data,'PNG')
+    for route in ['/', '/image-batch/']:
+     for edited,count,converted in [(False,1,False),(True,1,False),(False,2,False),(False,1,True),(True,1,True)]:
+      page=browser.new_page();page.goto(f'http://127.0.0.1:{server.server_port}{route}')
+      if edited:
+       page.get_by_label('너비 px',exact=True).fill('777');page.get_by_label('너비 px',exact=True).blur()
+      page.get_by_label('사진 선택',exact=True).set_input_files([{'name':f'synthetic-{i}.png','mimeType':'image/png','buffer':data.getvalue()} for i in range(count)])
+      if converted:
+       page.get_by_role('button',name='일괄 변환',exact=True).click();expect(page.locator('.workspace [role=status]')).to_contain_text('저장 가능 1')
+      page.get_by_role('button',name='제외',exact=True).first.click()
+      expect(page.locator('.file-row')).to_have_count(count-1);expect(page.locator('.result-table')).to_have_count(0)
+      dialogs=[]
+      page.on('dialog',lambda d:(dialogs.append(d.message),d.dismiss()))
+      page.get_by_label('언어 변경',exact=True).click()
+      expected=edited or count>1
+      if '--expect-removal-bug' in sys.argv and not expected:
+       assert len(dialogs)==1;outcome='reproduced stale dirty after last removal'
+      else:
+       assert len(dialogs)==int(expected),(route,edited,count,converted,dialogs)
+       expect(page.locator('html')).to_have_attribute('lang','ko' if expected else 'en');outcome='PASS'
+       if edited:expect(page.get_by_label('너비 px',exact=True)).to_have_value('777')
+      results.append({'route':route,'settings_edited':edited,'files_before':count,'converted':converted,'removal':outcome})
+      page.close()
    browser.close()
  finally:server.shutdown();server.server_close()
-name='settings-dirty-before.json' if '--expect-bug' in sys.argv else 'settings-dirty-after.json'
+name='settings-removal-before.json' if '--expect-removal-bug' in sys.argv else 'settings-dirty-before.json' if '--expect-bug' in sys.argv else 'settings-dirty-after.json'
 (out/name).write_text(json.dumps(results,indent=2));print(json.dumps(results))
