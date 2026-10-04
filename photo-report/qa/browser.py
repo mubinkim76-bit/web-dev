@@ -95,6 +95,47 @@ try:
    assert page.evaluate('document.documentElement.scrollWidth <= innerWidth + 1')
    return {'limit_recovery':'PASS','letter_pdf_pages':len(doc),'width':320}
   record('consumer narrow limit recovery and multipage Letter download',narrow_limit)
+  def csv_latest_request():
+   results=[]
+   for completion in ['A-first','B-first','stale-error','clear-pending']:
+    go('en');page.get_by_label('Choose report photos',exact=True).set_input_files([png()]);expect(page.locator('.photo-row')).to_have_count(1)
+    page.evaluate("""() => {
+     window.pendingCsv=[]; const original=File.prototype.arrayBuffer;
+     File.prototype.arrayBuffer=function(){
+      if(!this.name.endsWith('.csv')) return original.call(this);
+      return new Promise((resolve,reject)=>pendingCsv.push({name:this.name,finish:()=>original.call(this).then(resolve,reject),fail:()=>reject(new Error('stale CSV failure'))}));
+     };
+    }""")
+    csv_input=page.get_by_label('Caption CSV',exact=True)
+    for name in ['A','B']:
+     csv_input.set_input_files({'name':name+'.csv','mimeType':'text/csv','buffer':('file_name,caption,work_date\nalpha.png,'+name+',2026-10-04').encode()})
+    page.wait_for_function('pendingCsv.length === 2')
+    if completion=='clear-pending':
+     btn('Clear all').click()
+     page.evaluate('async()=>{await pendingCsv[0].finish();await pendingCsv[1].finish()}')
+     expect(page.locator('.photo-row')).to_have_count(0);expect(page.locator('.workspace [role=status]')).to_have_text('Workspace cleared')
+    else:
+     first=0 if completion=='A-first' else 1
+     page.evaluate('(i)=>pendingCsv[i].finish()',first)
+     expect(page.locator('.photo-row textarea')).to_have_value('' if first==0 else 'B')
+     if first==0:assert csv_input.evaluate('(e)=>e.files[0]?.name')=='B.csv'
+     page.evaluate('(fail)=>fail ? pendingCsv[0].fail() : pendingCsv['+str(1-first)+'].finish()',completion=='stale-error')
+     expect(page.locator('.photo-row textarea')).to_have_value('B')
+     expect(page.locator('.workspace [role=status]')).to_contain_text('1 captions linked')
+    results.append(completion)
+   return {'latest_request_only':results}
+  record('latest CSV request wins regardless of completion order',csv_latest_request)
+  def clear_details():
+   for lang in ['en','ko']:
+    go(lang);page.evaluate("window.dirtyEvents=[];window.addEventListener('workspace-dirty',e=>dirtyEvents.push(e.detail))")
+    fields=page.locator('.grid-2 input');fields.nth(0).fill('custom title');fields.nth(1).fill('custom author')
+    page.locator('.grid-2 select').nth(0).select_option('Letter');page.locator('.grid-2 select').nth(1).select_option('2')
+    page.get_by_role('button',name='Clear all' if lang=='en' else '전체 지우기',exact=True).click()
+    expect(fields.nth(0)).to_have_value('Site photo report' if lang=='en' else '현장 사진대지');expect(fields.nth(1)).to_have_value('')
+    expect(page.locator('.grid-2 select').nth(0)).to_have_value('A4');expect(page.locator('.grid-2 select').nth(1)).to_have_value('4')
+    assert page.evaluate('dirtyEvents.at(-1) === false')
+   return {'localized_defaults':'PASS','author_cleared':'PASS','dirty_false':'PASS'}
+  record('clear all restores report details and clean state',clear_details)
   def responsive():
    screenshots=[]
    for lang in ['ko','en']:
