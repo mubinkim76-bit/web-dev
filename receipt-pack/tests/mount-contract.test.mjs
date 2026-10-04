@@ -17,3 +17,35 @@ class Element {
 function setup(){globalThis.Node=Element;globalThis.matchMedia=()=>({matches:false});globalThis.CustomEvent=class{constructor(type,options){this.type=type;this.detail=options.detail;}};globalThis.document={createElement:t=>new Element(t),createTextNode:t=>new Element('#text',String(t)),body:new Element('body'),activeElement:null};const data=new Map();globalThis.window={dispatchEvent(){},addEventListener(){},removeEventListener(){},localStorage:{getItem:k=>data.get(k)||null,setItem:(k,v)=>data.set(k,v),removeItem:k=>data.delete(k)}};globalThis.Worker=class{postMessage(){}terminate(){}};}
 const routes=[["receipts","mount"]];
 for(const [i,[file,method]]of routes.entries())test(`catalog ${String(i+1).padStart(2,'0')} ${file}/${method} mounts and cleans up`,async()=>{setup();const mod=await import(`../src/tools/${file}.js`),root=new Element('div');assert.equal(typeof mod[method],'function');const cleanup=mod[method](root,{lang:'en',t:(ko,en)=>en,toast(){}});assert.equal(typeof cleanup,'function');assert.ok(root.textContent.length>30);const errors=root.querySelectorAll('p').filter(n=>n.attrs.role==='alert'&&!n.hidden);assert.equal(errors.length,0,errors.map(n=>n.textContent).join(' / '));cleanup();});
+
+test('failed replacement preserves confirmed rows, dirty state and object URLs',async()=>{
+ setup();
+ const dirty=[],created=[],revoked=[];
+ window.dispatchEvent=e=>{if(e.type==='workspace-dirty')dirty.push(e.detail);};
+ const bitmap=globalThis.createImageBitmap,create=URL.createObjectURL,revoke=URL.revokeObjectURL;
+ globalThis.createImageBitmap=async()=>({width:1,height:1,close(){}});
+ URL.createObjectURL=()=>{const url=`blob:test-${created.length}`;created.push(url);return url;};
+ URL.revokeObjectURL=url=>revoked.push(url);
+ const valid=new File([Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+jRZkAAAAASUVORK5CYII=','base64')],'valid.png');
+ const broken=new File(['broken'],'broken.png');
+ const {mount}=await import('../src/tools/receipts.js'),root=new Element('div');
+ const cleanup=mount(root,{t:(ko,en)=>en,toast(){}});
+ try{
+  const input=root.querySelectorAll('input').find(n=>n.attrs.type==='file');
+  const load=async files=>{input.files=files;await input.events.get('change')();};
+  const rows=()=>root.querySelectorAll('section').filter(n=>n.className?.includes('photo-row'));
+  await load([valid]);const original=rows()[0],fields=original.querySelectorAll('input');
+  fields[0].value='2026-10-03';fields[0].events.get('input')();
+  fields[1].value='1200';fields[1].events.get('input')();
+  fields.at(-1).checked=true;fields.at(-1).events.get('change')();
+  assert.equal(fields.at(-1).checked,true);
+  for(const files of [[broken],[valid,broken],[],Array(11).fill(valid)]){
+   await load(files);assert.equal(rows().length,1);assert.equal(rows()[0],original);
+   assert.equal(fields[1].value,'1200');assert.equal(fields.at(-1).checked,true);
+   assert.equal(dirty.at(-1),true);assert.ok(!revoked.includes(created[0]));
+  }
+  assert.ok(revoked.includes(created[1]),'staged URL from failed mixed batch is released');
+  await load([valid]);assert.notEqual(rows()[0],original);assert.ok(revoked.includes(created[0]));
+  assert.equal(rows()[0].querySelectorAll('input').at(-1).checked,false);
+ }finally{cleanup();globalThis.createImageBitmap=bitmap;URL.createObjectURL=create;URL.revokeObjectURL=revoke;}
+});
