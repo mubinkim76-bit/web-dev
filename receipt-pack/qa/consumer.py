@@ -77,6 +77,24 @@ try:
    page.on('dialog',accept_dialog);page.get_by_label('Change language',exact=True).click();expect(page.locator('html')).to_have_attribute('lang','ko');expect(page.locator('.photo-row')).to_have_count(0)
    return {'decline_preserves_input':True,'accept_clears_input':True}
   record('language change cancellation and confirmed navigation',language_guard)
+  def failed_replacement_preserves_state():
+   go('en');page.evaluate("""()=>{window.lastDirty=false;window.addEventListener('workspace-dirty',e=>window.lastDirty=e.detail)}""")
+   inp=page.get_by_label('Choose receipt images',exact=True);inp.set_input_files(png());expect(page.locator('.photo-row')).to_have_count(1)
+   row=page.locator('.photo-row');row.get_by_label('Transaction date · manual',exact=True).fill('2026-10-03');row.get_by_label('Final paid amount',exact=True).fill('1200');row.get_by_label('Note (optional)',exact=True).fill('Preserve me');row.get_by_role('checkbox').check()
+   save('Confirmed totals by currency CSV','before-replacement.csv');old_url=row.locator('img').get_attribute('src')
+   broken={'name':'broken.png','mimeType':'image/png','buffer':b'not a real image'}
+   undecodable={**png(),'name':'broken.png','buffer':png()['buffer'][:32]}
+   for files in [[broken],[jpg(),broken],[undecodable],[broken]]:
+    inp.set_input_files(files);expect(page.get_by_role('status')).to_contain_text('broken.png');expect(inp).to_be_enabled();expect(page.locator('.photo-row')).to_have_count(1)
+    expect(row.get_by_label('Transaction date · manual',exact=True)).to_have_value('2026-10-03');expect(row.get_by_label('Final paid amount',exact=True)).to_have_value('1200');expect(row.get_by_label('Note (optional)',exact=True)).to_have_value('Preserve me');expect(row.get_by_role('checkbox')).to_be_checked();assert row.locator('img').get_attribute('src')==old_url
+    assert page.evaluate('window.lastDirty === true');assert page.evaluate('document.querySelector(".photo-row img").naturalWidth > 0')
+    path=save('Confirmed totals by currency CSV','after-replacement.csv');assert 'KRW,1200,1' in path.read_text(encoding='utf-8-sig')
+   inp.set_input_files([]);expect(page.locator('.photo-row')).to_have_count(1);expect(row.get_by_role('checkbox')).to_be_checked()
+   save('Create evidence PDF from confirmed values','preserved.pdf');assert len(fitz.open(OUT/'preserved.pdf'))==1
+   page.screenshot(path=OUT/'preserved-after-failure.png',full_page=True)
+   inp.set_input_files(jpg());expect(row.locator('h3')).to_contain_text('rotated.jpg');expect(row.get_by_role('checkbox')).not_to_be_checked();expect(row.get_by_label('Final paid amount',exact=True)).to_have_value('')
+   return {'failed_and_mixed_batches_preserved':4,'dirty_preserved':True,'csv_pdf_after_failure':True,'empty_selection_preserved':True,'valid_replacement':True}
+  record('failed replacement preserves confirmed receipts and dirty state',failed_replacement_preserves_state)
   def responsive():
    screenshots=[]
    for lang in ['ko','en']:
