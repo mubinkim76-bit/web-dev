@@ -10,7 +10,7 @@
   "runtime_js_modules": 7,
   "static_vendor_scripts": [],
   "public_deployment": false,
-  "source_tree_sha256": "04485e931758b0b5d11ac48b2c8ff42521d2fe112864fd788f4dfd4d3be05ee3",
+  "source_tree_sha256": "72eb09d25a237631dc77674a07f81eb58837a6ed1bd439560207bbdd9380c16b",
   "manifest": "PROJECT-MANIFEST.json",
   "spec": "SPEC.json",
   "node_test_cases": 4,
@@ -42,9 +42,9 @@
     },
     {
       "path": "index.html",
-      "bytes": 842,
-      "sha256": "9958b5fd8f2378c046e8ed12b977c16c89031ed56a32327a9ec4d75c323c9ca4",
-      "origin": "standalone-extraction-or-shell"
+      "bytes": 2334,
+      "sha256": "27cfbc4aff424eb51d35e5ea81cd132033b3252877181005e0ad08b13610c868",
+      "origin": "independent-service-revision"
     },
     {
       "path": "package.json",
@@ -96,9 +96,9 @@
     },
     {
       "path": "src/app.js",
-      "bytes": 1978,
-      "sha256": "89145a80cfd9bd44efa3de7fcab28158bf4dd96a54c0ac8ac49426950f84cb80",
-      "origin": "standalone-extraction-or-shell"
+      "bytes": 2514,
+      "sha256": "1322952b4971b4cc46049775672b984918b657778f9bc91bc3e9678983746d2e",
+      "origin": "independent-service-revision"
     },
     {
       "path": "src/event-contract.js",
@@ -119,6 +119,12 @@
       "origin": "standalone-extraction-or-shell"
     },
     {
+      "path": "src/service-guide.js",
+      "bytes": 3442,
+      "sha256": "3d5899b9a26ea7ead29b206da7d194dbf4361be5b2691fa5bbe1d8105ff77386",
+      "origin": "independent-service-addition"
+    },
+    {
       "path": "src/shared.js",
       "bytes": 2647,
       "sha256": "617c99beb42034711186a45e95bd35ce357e871e67f34df25920253e7056d2dd",
@@ -126,9 +132,9 @@
     },
     {
       "path": "src/styles.css",
-      "bytes": 4533,
-      "sha256": "72b6b8d2db29f3604fb0a36fde8a6e291677ef094dca9d36d81a0741ec23b6f3",
-      "origin": "standalone-extraction-or-shell"
+      "bytes": 5265,
+      "sha256": "7a2875e99849770a10fc0fa28ad9c96267d59bbce84d0a23370a078c933d476d",
+      "origin": "independent-service-revision"
     },
     {
       "path": "src/tools/auxiliary-ui.js",

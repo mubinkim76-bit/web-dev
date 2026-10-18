@@ -25,9 +25,9 @@
   },
   {
     "path": "index.html",
-    "bytes": 905,
-    "sha256": "cc21c839196063f82519b28982af107e99c9eeb3cffc47628c4c4aad2e14efc4",
-    "origin": "standalone-extraction-or-shell"
+    "bytes": 2365,
+    "sha256": "1d011edb50efc7c9ca0d5d8ddc2d4555bc157a5bf5e3c4a7d8fe11f113648071",
+    "origin": "independent-service-revision"
   },
   {
     "path": "package.json",
@@ -91,9 +91,9 @@
   },
   {
     "path": "src/app.js",
-    "bytes": 1992,
-    "sha256": "2cc6c6b8f3495191d57e2c5e83d4a6c40c7fb4eb9d12b42d4d41d5ae8778efdd",
-    "origin": "standalone-extraction-or-shell"
+    "bytes": 2510,
+    "sha256": "49b2e56ff7858a6459335836e55c42c4c5ab544c25073cfe1d522deae83edc29",
+    "origin": "independent-service-revision"
   },
   {
     "path": "src/event-contract.js",
@@ -120,6 +120,12 @@
     "origin": "standalone-extraction-or-shell"
   },
   {
+    "path": "src/service-guide.js",
+    "bytes": 3380,
+    "sha256": "d688f761ac10f265e1bfe1faa380b87d45ec2f188e205ce0ff9abaad3d592e43",
+    "origin": "independent-service-addition"
+  },
+  {
     "path": "src/shared.js",
     "bytes": 2647,
     "sha256": "617c99beb42034711186a45e95bd35ce357e871e67f34df25920253e7056d2dd",
@@ -127,9 +133,9 @@
   },
   {
     "path": "src/styles.css",
-    "bytes": 4630,
-    "sha256": "6e85def7b6db41dd4b160d3be70c250506994b09a0065162eccc2af35a62d5ac",
-    "origin": "standalone-extraction-or-shell"
+    "bytes": 5362,
+    "sha256": "41058843b4618d81f6f5e42527355ff053478d745e8f0e65fac513215863154c",
+    "origin": "independent-service-revision"
   },
   {
     "path": "src/tools/images.js",

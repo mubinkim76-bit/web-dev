@@ -67,8 +67,8 @@ try:
    page.locator('[name=gm-save]').uncheck();assert page.evaluate("localStorage.getItem('game11.current.v1')") is None
    page.evaluate("localStorage.setItem('game11.current.v1','{broken')");page.once('dialog',lambda d:d.accept());page.reload()
    expect(page.locator('.gm-warning')).to_contain_text('could not be restored');page.locator('[name=gm-mode][value=local2p]').check();action('start').click();place(0,0);stones(1);shot('malformed-save-recovered')
-   page.locator('summary').click();action('delete-save').click();action('confirm-no').click();assert page.evaluate("localStorage.getItem('game11.current.v1')")=='{broken'
-   page.locator('summary').click();action('delete-save').click();action('confirm-yes').click();assert page.evaluate("localStorage.getItem('game11.current.v1')") is None;stones(1)
+   page.locator('.gm-rules > summary').click();action('delete-save').click();action('confirm-no').click();assert page.evaluate("localStorage.getItem('game11.current.v1')")=='{broken'
+   page.locator('.gm-rules > summary').click();action('delete-save').click();action('confirm-yes').click();assert page.evaluate("localStorage.getItem('game11.current.v1')") is None;stones(1)
    return 'Save/resume, opt-out deletion, corrupt input recovery, delete cancellation/confirmation'
   record('local saving and malformed input recovery',storage)
   def language():

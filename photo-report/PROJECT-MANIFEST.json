@@ -12,7 +12,7 @@
     "pdf"
   ],
   "public_deployment": false,
-  "source_tree_sha256": "07e56510db8cb283bca87955bc56662fbbd2b3c532b4b4117e7f470a8ecefed9",
+  "source_tree_sha256": "28e1cbe45fcce3426b9186a1da2ee2cce184cb8a309f8155a9b31fb2f640ee55",
   "manifest": "PROJECT-MANIFEST.json",
   "spec": "SPEC.json",
   "node_test_cases": 21,
@@ -44,9 +44,9 @@
     },
     {
       "path": "index.html",
-      "bytes": 895,
-      "sha256": "e788ba432fd79c3ec25fd5245b1b08a997b5fe5180535c4ba25d9b14d242e6d9",
-      "origin": "standalone-extraction-or-shell"
+      "bytes": 2314,
+      "sha256": "0309fec9ba59affeb815835222ce12f37f3fa39be840b565b128631326ad13b9",
+      "origin": "independent-service-revision"
     },
     {
       "path": "package.json",
@@ -110,9 +110,9 @@
     },
     {
       "path": "src/app.js",
-      "bytes": 1956,
-      "sha256": "d26a92a71628b03dfc65f4d52b45bbe54c39317d6445a5109f59de9b5db8574e",
-      "origin": "standalone-extraction-or-shell"
+      "bytes": 2510,
+      "sha256": "4a4a607a8bc1660cc68240960efa40d6b697f864a0f45ae0657a146548ef5eb2",
+      "origin": "independent-service-revision"
     },
     {
       "path": "src/event-contract.js",
@@ -151,6 +151,12 @@
       "origin": "standalone-extraction-or-shell"
     },
     {
+      "path": "src/service-guide.js",
+      "bytes": 3346,
+      "sha256": "ae0bdfc9375b266b1eb107691b8f685be2bd37764898933266367ebee48812c8",
+      "origin": "independent-service-addition"
+    },
+    {
       "path": "src/shared.js",
       "bytes": 2647,
       "sha256": "617c99beb42034711186a45e95bd35ce357e871e67f34df25920253e7056d2dd",
@@ -158,9 +164,9 @@
     },
     {
       "path": "src/styles.css",
-      "bytes": 5197,
-      "sha256": "f1146589917c84c46b106ca71ad10701ef80b5a2f788962af98dbb5a3bfae522",
-      "origin": "standalone-extraction-or-shell"
+      "bytes": 5929,
+      "sha256": "e3561fc420c8cd67cee53859f3a6a954f0db2f98b24049653f2f8ce672b956d2",
+      "origin": "independent-service-revision"
     },
     {
       "path": "src/tools/data-core.js",

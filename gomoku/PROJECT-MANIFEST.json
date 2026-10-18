@@ -10,7 +10,7 @@
   "runtime_js_modules": 10,
   "static_vendor_scripts": [],
   "public_deployment": false,
-  "source_tree_sha256": "9006b69ebc5e195e253152b65533e9085097b42f45b6b925b46687bb921259d7",
+  "source_tree_sha256": "c77e8c95700c242e63e3463a4765bf0005083ebd5e25d2d7f6482869e1da9327",
   "manifest": "PROJECT-MANIFEST.json",
   "spec": "SPEC.json",
   "node_test_cases": 42,
@@ -54,9 +54,9 @@
     },
     {
       "path": "index.html",
-      "bytes": 829,
-      "sha256": "914f19b0b964bdaa7dccd0b300594f4ed2350a72a929caa9676653157d3a109e",
-      "origin": "standalone-extraction-or-shell"
+      "bytes": 2434,
+      "sha256": "ea096a1b45076d10754e77a2bd7a0f611059d06d73c268db5afb6d1bba4289bc",
+      "origin": "independent-service-revision"
     },
     {
       "path": "package.json",
@@ -108,9 +108,9 @@
     },
     {
       "path": "src/app.js",
-      "bytes": 1935,
-      "sha256": "3365f96d12d387d17782f652c8fa8226d728658083d1c11e57dfa465dc951194",
-      "origin": "standalone-extraction-or-shell"
+      "bytes": 2510,
+      "sha256": "2f6ed7858255d12851f9d5240e077c1384bd6170483ade37d645f482eee3e326",
+      "origin": "independent-service-revision"
     },
     {
       "path": "src/event-contract.js",
@@ -149,6 +149,12 @@
       "origin": "standalone-extraction-or-shell"
     },
     {
+      "path": "src/service-guide.js",
+      "bytes": 3623,
+      "sha256": "b745aa0383276335e3685e27192b1f585438d7ff9349fde8f5a45eae616083e8",
+      "origin": "independent-service-addition"
+    },
+    {
       "path": "src/shared.js",
       "bytes": 2647,
       "sha256": "617c99beb42034711186a45e95bd35ce357e871e67f34df25920253e7056d2dd",
@@ -156,9 +162,9 @@
     },
     {
       "path": "src/styles.css",
-      "bytes": 4548,
-      "sha256": "a1329ff8e16154977b670a67cb0b81adf4dbc303ac831dc72e0069609d70bafd",
-      "origin": "standalone-extraction-or-shell"
+      "bytes": 5280,
+      "sha256": "7bcf9cd77435178fd045072d41f89129b865da7c4da0cedbd58a2a446bbaafd9",
+      "origin": "independent-service-revision"
     },
     {
       "path": "src/tools/gomoku-worker.js",

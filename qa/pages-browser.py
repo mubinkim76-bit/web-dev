@@ -21,6 +21,32 @@ try:
   context=browser.new_context();page=context.new_page();requests=[];errors=[]
   page.on('pageerror',lambda e:errors.append(str(e)));page.on('request',lambda r:requests.append(r.url))
   page.goto(base+'/');expect(page.locator('main li')).to_have_count(11)
+  # New public content must work in both languages, including static English routes.
+  for project in projects:
+   slug=project['folder']
+   for locale,route in [('ko','/'),('en','/en/')]:
+    page.goto(base+'/'+slug+route)
+    expect(page.locator('html')).to_have_attribute('lang',locale)
+    expect(page.locator('.tool-heading h1')).to_have_count(1)
+    expect(page.locator('.service-guide ol li')).to_have_count(3)
+    page.locator('.service-guide summary').click()
+    expect(page.locator('.service-guide-content')).to_be_visible()
+    assert page.title()==page.locator('.tool-heading h1').inner_text()
+    assert len(page.locator('meta[name=description]').get_attribute('content'))>20
+    assert page.locator('link[rel=canonical]').get_attribute('href').endswith('/'+slug+route)
+    page.set_viewport_size({'width':320,'height':900})
+    assert page.evaluate('document.documentElement.scrollWidth <= innerWidth+1'),(slug,locale)
+   page.get_by_role('button',name='Change language',exact=True).click()
+   expect(page.locator('html')).to_have_attribute('lang','ko')
+   page.reload();expect(page.locator('html')).to_have_attribute('lang','ko')
+  page.goto(base+'/');page.locator('#search').fill('Gomoku')
+  expect(page.locator('.service-list > li:visible')).to_have_count(1)
+  page.locator('#language').click();expect(page.locator('#search')).to_have_value('Gomoku')
+  page.reload();expect(page.locator('#search')).to_have_value('Gomoku')
+  page.locator('#search').fill('zz-no-such-tool');expect(page.locator('#empty')).to_be_visible()
+  page.locator('#reset').click();expect(page.locator('.service-list > li:visible')).to_have_count(11)
+  page.get_by_role('button',name='Games',exact=True).click();expect(page.locator('.service-list > li:visible')).to_have_count(1)
+  page.get_by_role('button',name='All',exact=True).click()
   # Only Gomoku writes storage. Exercise the real opt-in saved board and then
   # navigate all other apps in this SAME context/origin to detect key collisions.
   page.goto(base+'/gomoku/?lang=en');page.locator('[name=gm-mode][value=local2p]').check();page.locator('[data-action=start]').click()

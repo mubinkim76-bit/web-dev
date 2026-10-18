@@ -25,9 +25,9 @@
   },
   {
     "path": "index.html",
-    "bytes": 841,
-    "sha256": "491654cbfbd059f9d69e2d640f300bbc0f466c7fbdd2ac7c2aaa32e1bf47d668",
-    "origin": "standalone-extraction-or-shell"
+    "bytes": 2366,
+    "sha256": "f6d12b19bcbcb1500e690c26858ae55ac16d64afde2e3f1cd8f722b743ee0694",
+    "origin": "independent-service-revision"
   },
   {
     "path": "package.json",
@@ -79,9 +79,9 @@
   },
   {
     "path": "src/app.js",
-    "bytes": 1982,
-    "sha256": "8f0793151180423ecc36305640a3fa3ee9f438fbcc3815b316899b64252f5e54",
-    "origin": "standalone-extraction-or-shell"
+    "bytes": 2521,
+    "sha256": "0c71361e3230fc92ce8d8f0ad4f211dcb9035888a28e2200c2ad1f229e232bd6",
+    "origin": "independent-service-revision"
   },
   {
     "path": "src/event-contract.js",
@@ -96,6 +96,12 @@
     "origin": "standalone-extraction-or-shell"
   },
   {
+    "path": "src/service-guide.js",
+    "bytes": 3529,
+    "sha256": "0a605a97f01d27467c4c1d3bcc037087bc25d4b4f2ce8f589bcf90d9b1a08043",
+    "origin": "independent-service-addition"
+  },
+  {
     "path": "src/shared.js",
     "bytes": 2647,
     "sha256": "617c99beb42034711186a45e95bd35ce357e871e67f34df25920253e7056d2dd",
@@ -103,9 +109,9 @@
   },
   {
     "path": "src/styles.css",
-    "bytes": 4495,
-    "sha256": "dddbe1235e857b9139158ce33543fa57623016ccad847226ce03699379c382ec",
-    "origin": "standalone-extraction-or-shell"
+    "bytes": 5227,
+    "sha256": "28a6bd1e666b2c928d960d584a1a14b17e7a6770743f31d47677fc1e7feb12b9",
+    "origin": "independent-service-revision"
   },
   {
     "path": "src/tools/data-core.js",

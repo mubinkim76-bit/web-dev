@@ -10,7 +10,7 @@
   "runtime_js_modules": 7,
   "static_vendor_scripts": [],
   "public_deployment": false,
-  "source_tree_sha256": "1449a2c60d49d97390e2ed9f28b69dfd43f588661b26bc16ed8d467ccca5d6b7",
+  "source_tree_sha256": "28d33640ad397d35570a267cf06cd929453fd4b06552228aac9252590f7b7322",
   "manifest": "PROJECT-MANIFEST.json",
   "spec": "SPEC.json",
   "node_test_cases": 15,
@@ -42,9 +42,9 @@
     },
     {
       "path": "index.html",
-      "bytes": 840,
-      "sha256": "2063015348c970ed6aabb2e461620e05089432a37c1259e51b8a32549af88d18",
-      "origin": "standalone-extraction-or-shell"
+      "bytes": 2287,
+      "sha256": "99e5e5de5d791483fd477a7855b397eafe590a1ca42679d2f74c2b902bff5da4",
+      "origin": "independent-service-revision"
     },
     {
       "path": "package.json",
@@ -96,9 +96,9 @@
     },
     {
       "path": "src/app.js",
-      "bytes": 1980,
-      "sha256": "2006f722252a0c672150c711b231f697e180305efeceecdacaac87b146647a1b",
-      "origin": "standalone-extraction-or-shell"
+      "bytes": 2522,
+      "sha256": "e3e211fcb48c10158b43d7307f73b8041f991946a0def6b246ef786bd9e384bc",
+      "origin": "independent-service-revision"
     },
     {
       "path": "src/event-contract.js",
@@ -113,6 +113,12 @@
       "origin": "standalone-extraction-or-shell"
     },
     {
+      "path": "src/service-guide.js",
+      "bytes": 3414,
+      "sha256": "c241d033aede2134f4c173405da53d95b3b47b4562e54d7e160539e262d87d8c",
+      "origin": "independent-service-addition"
+    },
+    {
       "path": "src/shared.js",
       "bytes": 2647,
       "sha256": "617c99beb42034711186a45e95bd35ce357e871e67f34df25920253e7056d2dd",
@@ -120,9 +126,9 @@
     },
     {
       "path": "src/styles.css",
-      "bytes": 4495,
-      "sha256": "dddbe1235e857b9139158ce33543fa57623016ccad847226ce03699379c382ec",
-      "origin": "standalone-extraction-or-shell"
+      "bytes": 5227,
+      "sha256": "28a6bd1e666b2c928d960d584a1a14b17e7a6770743f31d47677fc1e7feb12b9",
+      "origin": "independent-service-revision"
     },
     {
       "path": "src/tools/data-core.js",

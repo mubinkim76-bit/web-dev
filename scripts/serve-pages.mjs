@@ -8,7 +8,7 @@ export function createPagesServer(root=fileURLToPath(new URL('../dist/',import.m
  root=path.resolve(root);
  const headers=Object.fromEntries(fs.readFileSync(path.join(root,'_headers'),'utf8').split('\n').filter(l=>/^\s+\S/.test(l)).map(l=>{const i=l.indexOf(':');return [l.slice(0,i).trim(),l.slice(i+1).trim()];}));
  const redirects=new Map(fs.readFileSync(path.join(root,'_redirects'),'utf8').trim().split('\n').map(l=>{const [from,to,status]=l.split(/\s+/);return [from,{to,status:Number(status)}];}));
- const mime={'.html':'text/html; charset=utf-8','.css':'text/css; charset=utf-8','.js':'text/javascript; charset=utf-8','.svg':'image/svg+xml','.woff':'font/woff','.json':'application/json','.txt':'text/plain; charset=utf-8','.md':'text/plain; charset=utf-8'};
+ const mime={'.xml':'application/xml; charset=utf-8','.html':'text/html; charset=utf-8','.css':'text/css; charset=utf-8','.js':'text/javascript; charset=utf-8','.svg':'image/svg+xml','.woff':'font/woff','.json':'application/json','.txt':'text/plain; charset=utf-8','.md':'text/plain; charset=utf-8'};
  return http.createServer((req,res)=>{
   const reply=(status,body='',extra={})=>{res.writeHead(status,{...headers,...extra});res.end(req.method==='HEAD'?undefined:body);};
   if(!['GET','HEAD'].includes(req.method))return reply(405,'Method not allowed',{'Allow':'GET, HEAD'});

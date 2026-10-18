@@ -29,3 +29,14 @@ test('HTTP routes, redirects preserve queries, real 404s, MIME and global securi
   assert.equal((await fetch(base+'/%ZZ')).status,400);assert.equal((await fetch(base+'/',{method:'POST'})).status,405);assert.equal(await (await fetch(base+'/',{method:'HEAD'})).text(),'');
  }finally{await new Promise(r=>server.close(r));}
 });
+test('static KO/EN introductions, canonical/alternate URLs and sitemap match all services',async()=>{
+ const sitemap=fs.readFileSync('dist/sitemap.xml','utf8');assert.equal((sitemap.match(/<loc>/g)||[]).length,23);
+ for(const {folder:s} of projects){
+  const {copy}=await import(`../${s}/src/service-guide.js`);
+  for(const [lang,suffix] of [['ko',''],['en','en/']]){
+   const html=fs.readFileSync(`dist/${s}/${suffix}index.html`,'utf8');
+   assert(html.includes(`<html lang="${lang}">`));assert(html.includes('<h1>'));assert(html.includes(copy[lang].steps[0]));assert(html.includes('rel="canonical"'));assert(html.includes('hreflang="en"'));assert(sitemap.includes(`/${s}/${suffix}</loc>`));
+   assert.equal((html.match(/<li>/g)||[]).length,3);
+  }
+ }
+});
